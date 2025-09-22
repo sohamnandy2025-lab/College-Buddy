@@ -1,10 +1,17 @@
-// College Buddy - Main JavaScript File
+// College Buddy - Main JavaScript File with Firebase Auth integration
+
+let fbApp = null;
+let auth = null;
+let db = null;
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize the page
     initializePage();
     
+    // Initialize Firebase (if configured)
+    initializeFirebase();
+
     // Set up event listeners
     setupEventListeners();
     
@@ -176,30 +183,40 @@ function setupSocialAuthHandlers() {
     // Google auth handlers
     const googleButtons = document.querySelectorAll('#googleSignup, #googleLogin');
     googleButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            showNotification('Google Authentication 🔐', 
-                'Google OAuth integration coming soon! This will allow instant signup with your Google account.', 
-                'info');
+        btn.addEventListener('click', async () => {
+            if (!auth) {
+                showNotification('Configure Firebase', 'Please set up firebase-config.js to enable Google sign-in.', 'warning');
+                return;
+            }
+            try {
+                const provider = new firebase.auth.GoogleAuthProvider();
+                const result = await auth.signInWithPopup(provider);
+                const user = result.user;
+                await ensureUserProfile(user, { provider: 'google' });
+                showNotification('Signed in ✅', `Welcome ${user.displayName || user.email}!`, 'success');
+                const signupModalEl = document.getElementById('signupModal');
+                const loginModalEl = document.getElementById('loginModal');
+                if (signupModalEl) bootstrap.Modal.getInstance(signupModalEl)?.hide();
+                if (loginModalEl) bootstrap.Modal.getInstance(loginModalEl)?.hide();
+            } catch (e) {
+                console.error('Google sign-in error', e);
+                showNotification('Sign-in failed', e.message || 'Could not sign in with Google.', 'danger');
+            }
         });
     });
     
-    // Facebook auth handlers
+    // Facebook/GitHub remain disabled until configured
     const facebookButtons = document.querySelectorAll('#facebookSignup, #facebookLogin');
     facebookButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            showNotification('Facebook Authentication 📱', 
-                'Facebook OAuth integration coming soon! Connect with your Facebook account.', 
-                'info');
+            showNotification('Facebook Authentication', 'Enable Facebook in Firebase Auth to use this.', 'info');
         });
     });
     
-    // GitHub auth handler
     const githubButton = document.getElementById('githubSignup');
     if (githubButton) {
         githubButton.addEventListener('click', () => {
-            showNotification('GitHub Authentication 🐈‍⬛', 
-                'GitHub OAuth perfect for developer students! Integration coming soon.', 
-                'info');
+            showNotification('GitHub Authentication', 'Enable GitHub in Firebase Auth to use this.', 'info');
         });
     }
 }
@@ -223,38 +240,64 @@ function setupFormHandlers() {
 /**
  * Handle signup form submission
  */
-function handleSignupSubmission(e) {
+async function handleSignupSubmission(e) {
     e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(e.target);
-    const firstName = formData.get('firstName') || document.getElementById('firstName').value;
-    const email = formData.get('email') || document.getElementById('email').value;
-    
-    showNotification('Welcome to College Buddy! 🎉', 
-        `Hi ${firstName}! Your account creation is in progress. You'll receive a verification email at ${email}.`, 
-        'success');
-    
-    // Close modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('signupModal'));
-    if (modal) modal.hide();
+    if (!auth || !db) {
+        showNotification('Configure Firebase', 'Please set up firebase-config.js to enable sign up.', 'warning');
+        return;
+    }
+
+    try {
+        const form = e.target;
+        const firstName = document.getElementById('firstName').value.trim();
+        const lastName = document.getElementById('lastName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const college = document.getElementById('college').value.trim();
+        const major = document.getElementById('major').value.trim();
+        const password = document.getElementById('password').value;
+
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        const user = cred.user;
+        try { await user.updateProfile({ displayName: `${firstName} ${lastName}`.trim() }); } catch (_) {}
+        try { await user.sendEmailVerification(); } catch (_) {}
+
+        await ensureUserProfile(user, {
+            firstName, lastName, college, branch: major
+        });
+
+        showNotification('Welcome to College Buddy! 🎉', `Hi ${firstName}! We created your account. Please verify your email.`, 'success');
+
+        const modal = bootstrap.Modal.getInstance(document.getElementById('signupModal'));
+        if (modal) modal.hide();
+    } catch (e2) {
+        console.error('Signup error', e2);
+        showNotification('Signup failed', e2.message || 'Could not create your account.', 'danger');
+    }
 }
 
 /**
  * Handle login form submission
  */
-function handleLoginSubmission(e) {
+async function handleLoginSubmission(e) {
     e.preventDefault();
-    
-    const email = document.getElementById('loginEmail').value;
-    
-    showNotification('Welcome Back! 👋', 
-        `Logging you in with ${email}... This is a demo, but you'd be redirected to your dashboard!`, 
-        'success');
-    
-    // Close modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-    if (modal) modal.hide();
+    if (!auth) {
+        showNotification('Configure Firebase', 'Please set up firebase-config.js to enable sign in.', 'warning');
+        return;
+    }
+
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+    try {
+        const cred = await auth.signInWithEmailAndPassword(email, password);
+        const user = cred.user;
+        showNotification('Welcome Back! 👋', `Signed in as ${user.email}.`, 'success');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+        if (modal) modal.hide();
+    } catch (e2) {
+        console.error('Login error', e2);
+        showNotification('Login failed', e2.message || 'Could not sign you in.', 'danger');
+    }
 }
 
 /**
@@ -565,13 +608,60 @@ function handleFormSubmission(formData) {
     showNotification('Success!', 'Your information has been submitted successfully.', 'success');
 }
 
-// Export functions for potential module use
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        initializePage,
-        handleSignupClick,
-        toggleAboutSection,
-        showNotification,
-        isMobileDevice
-    };
+// Firebase initialization and helpers
+function initializeFirebase() {
+    try {
+        const cfg = window.COLLEGE_BUDDY_FIREBASE_CONFIG;
+        if (!cfg) { console.warn('firebase-config.js not found or empty'); return; }
+        if (!window.firebase || !window.firebase.initializeApp) { console.warn('Firebase SDK not loaded'); return; }
+        if (!fbApp) fbApp = firebase.initializeApp(cfg);
+        auth = firebase.auth();
+        db = firebase.firestore();
+        // Optional: auth state listener
+        auth.onAuthStateChanged((u) => {
+            if (u) console.log('Signed in as', u.email || u.uid);
+            else console.log('Signed out');
+        });
+    } catch (e) {
+        console.warn('Firebase init error', e);
+    }
+}
+
+async function ensureUserProfile(user, extra = {}) {
+    if (!db || !user) return;
+    const ref = db.collection('users').doc(user.uid);
+    const snap = await ref.get();
+    const now = firebase.firestore.FieldValue.serverTimestamp();
+    if (!snap.exists) {
+        const displayName = user.displayName || '';
+        const [firstName, ...rest] = displayName.split(' ');
+        const lastName = rest.join(' ');
+        const base = {
+            uid: user.uid,
+            name: displayName || extra.firstName ? `${extra.firstName || ''} ${extra.lastName || ''}`.trim() : (user.email || ''),
+            firstName: extra.firstName || firstName || '',
+            lastName: extra.lastName || lastName || '',
+            email: user.email || '',
+            college: extra.college || '',
+            branch: extra.branch || '',
+            friends: [],
+            createdAt: now,
+            updatedAt: now,
+        };
+        const tokens = buildSearchTokens(base);
+        await ref.set({ ...base, searchIndex: tokens }, { merge: true });
+    } else {
+        await ref.set({ updatedAt: now }, { merge: true });
+    }
+}
+
+function buildSearchTokens(u) {
+    const src = [u.name, u.firstName, u.lastName, u.email, u.college, u.branch]
+        .filter(Boolean)
+        .join(' ') // join fields
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, ' ');
+    const parts = src.split(/\s+/).filter(Boolean);
+    const uniq = Array.from(new Set(parts));
+    return uniq.slice(0, 100);
 }
