@@ -500,7 +500,7 @@
                     <li><a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
                         <i class="fas fa-users me-1"></i>Buddies
                     </a></li>
-                    <li><a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+                    <li><a href="profile-new.html#leaderboard" class="nav-item" onclick="setActive(this, 'leaderboard'); openLeaderboard()">
                         <i class="fas fa-trophy me-1"></i>Leaderboard
                     </a></li>
                     <li><a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
@@ -534,7 +534,7 @@
             <a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
                 <i class="fas fa-users me-2"></i>Buddies
             </a>
-            <a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+            <a href="profile-new.html#leaderboard" class="nav-item" onclick="setActive(this, 'leaderboard'); openLeaderboard()">
                 <i class="fas fa-trophy me-2"></i>Leaderboard
             </a>
             <a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
@@ -1033,6 +1033,11 @@
         // Profile button function
         function openProfile() {
             window.location.href = 'profile-new.html';
+        }
+
+        // Open leaderboard tab in profile page
+        function openLeaderboard() {
+            window.location.href = 'profile-new.html?tab=leaderboard';
         }
 
         // Initialize the page

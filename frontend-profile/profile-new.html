@@ -150,6 +150,21 @@
             box-shadow: var(--shadow-light);
         }
 
+        /* Ensure proper contrast in dark mode */
+        [data-theme="dark"] .btn {
+            border-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .btn-outline-primary {
+            color: #667eea;
+            border-color: #667eea;
+        }
+
+        [data-theme="dark"] .btn-outline-primary:hover {
+            background-color: #667eea;
+            color: white;
+        }
+
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-medium);
@@ -379,8 +394,44 @@
         
         .points-label {
             font-size: 1.2rem;
-            color: #6c757d;
+            color: var(--text-secondary);
             margin-top: 0.5rem;
+        }
+
+        /* Dark mode skill tags */
+        [data-theme="dark"] .tech-skill {
+            background: rgba(25, 118, 210, 0.2);
+            color: #64b5f6;
+            border-color: rgba(25, 118, 210, 0.3);
+        }
+
+        [data-theme="dark"] .soft-skill {
+            background: rgba(123, 31, 162, 0.2);
+            color: #ce93d8;
+            border-color: rgba(123, 31, 162, 0.3);
+        }
+
+        [data-theme="dark"] .hobby-skill {
+            background: rgba(56, 142, 60, 0.2);
+            color: #a5d6a7;
+            border-color: rgba(56, 142, 60, 0.3);
+        }
+
+        [data-theme="dark"] .achievement-item {
+            background: rgba(245, 124, 0, 0.2);
+            color: #ffb74d;
+            border-color: rgba(245, 124, 0, 0.3);
+        }
+
+        /* Dark mode navigation tabs */
+        [data-theme="dark"] .nav-tabs .nav-link {
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .nav-tabs .nav-link:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
         }
         
         /* Edit Mode */
@@ -724,7 +775,7 @@
                     <li><a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
                         <i class="fas fa-users me-1"></i>Buddies
                     </a></li>
-                    <li><a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+                    <li><a href="profile-new.html#leaderboard" class="nav-item" onclick="setActive(this, 'leaderboard'); openLeaderboard()">
                         <i class="fas fa-trophy me-1"></i>Leaderboard
                     </a></li>
                     <li><a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
@@ -758,7 +809,7 @@
             <a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
                 <i class="fas fa-users me-2"></i>Buddies
             </a>
-            <a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+            <a href="profile-new.html#leaderboard" class="nav-item" onclick="setActive(this, 'leaderboard'); openLeaderboard()">
                 <i class="fas fa-trophy me-2"></i>Leaderboard
             </a>
             <a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
@@ -1629,15 +1680,33 @@
             mobileNav.classList.remove('show');
         }
 
+        // Open leaderboard tab function
+        function openLeaderboard() {
+            // Activate leaderboard tab
+            const leaderboardTab = document.getElementById('leaderboard-tab');
+            if (leaderboardTab) {
+                leaderboardTab.click();
+            }
+        }
+
         // Profile button function (already on profile page, so just reload)
         function openProfile() {
             window.location.reload();
         }
 
-        // Initialize the page
+        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedTheme();
             loadProfile();
+            
+            // Check for tab parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const tabParam = urlParams.get('tab');
+            if (tabParam === 'leaderboard') {
+                setTimeout(() => {
+                    openLeaderboard();
+                }, 500); // Small delay to ensure page is loaded
+            }
         });
 
         // Close mobile menu when clicking outside
