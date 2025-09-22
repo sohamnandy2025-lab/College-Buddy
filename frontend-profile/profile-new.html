@@ -715,23 +715,20 @@
 
                 <!-- Desktop Navigation -->
                 <ul class="nav-menu d-none d-lg-flex">
-                    <li><a href="#" class="nav-item" onclick="setActive(this, 'chat')">
-                        <i class="fas fa-comments me-1"></i>Chat
-                    </a></li>
                     <li><a href="#" class="nav-item" onclick="setActive(this, 'search')">
                         <i class="fas fa-search me-1"></i>Search
                     </a></li>
                     <li><a href="discover.html" class="nav-item" onclick="setActive(this, 'discover')">
                         <i class="fas fa-compass me-1"></i>Discover
                     </a></li>
-                    <li><a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
-                        <i class="fas fa-trophy me-1"></i>Board
-                    </a></li>
-                    <li><a href="#" class="nav-item" onclick="setActive(this, 'notifications')">
-                        <i class="fas fa-bell me-1"></i>Alerts
-                    </a></li>
-                    <li><a href="profile-new.html" class="nav-item active" onclick="setActive(this, 'buddies')">
+                    <li><a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
                         <i class="fas fa-users me-1"></i>Buddies
+                    </a></li>
+                    <li><a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+                        <i class="fas fa-trophy me-1"></i>Leaderboard
+                    </a></li>
+                    <li><a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
+                        <i class="fas fa-bell me-1"></i>Notifications
                     </a></li>
                 </ul>
 
@@ -752,23 +749,20 @@
 
         <!-- Mobile Navigation -->
         <div class="mobile-nav" id="mobileNav">
-            <a href="#" class="nav-item" onclick="setActive(this, 'chat')">
-                <i class="fas fa-comments me-2"></i>Chat
-            </a>
             <a href="#" class="nav-item" onclick="setActive(this, 'search')">
                 <i class="fas fa-search me-2"></i>Search
             </a>
             <a href="discover.html" class="nav-item" onclick="setActive(this, 'discover')">
                 <i class="fas fa-compass me-2"></i>Discover
             </a>
-            <a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
-                <i class="fas fa-trophy me-2"></i>Board
-            </a>
-            <a href="#" class="nav-item" onclick="setActive(this, 'notifications')">
-                <i class="fas fa-bell me-2"></i>Alerts
-            </a>
-            <a href="profile-new.html" class="nav-item active" onclick="setActive(this, 'buddies')">
+            <a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
                 <i class="fas fa-users me-2"></i>Buddies
+            </a>
+            <a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+                <i class="fas fa-trophy me-2"></i>Leaderboard
+            </a>
+            <a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
+                <i class="fas fa-bell me-2"></i>Notifications
             </a>
         </div>
     </nav>
@@ -834,6 +828,12 @@
                 <button class="nav-link" id="points-tab" data-bs-toggle="tab" 
                         data-bs-target="#points" type="button" role="tab">
                     <i class="fas fa-coins me-2"></i>Current Points
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="leaderboard-tab" data-bs-toggle="tab" 
+                        data-bs-target="#leaderboard" type="button" role="tab">
+                    <i class="fas fa-trophy me-2"></i>Leaderboard
                 </button>
             </li>
         </ul>
@@ -1021,6 +1021,114 @@
                         <div class="col-md-4 text-center mb-3">
                             <div class="fw-bold fs-3 text-warning">+25</div>
                             <div class="text-muted">Profile Complete</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leaderboard Tab -->
+            <div class="tab-pane fade" id="leaderboard" role="tabpanel">
+                <div class="content-card">
+                    <h5 class="section-title">
+                        <i class="fas fa-trophy me-2"></i>Student Leaderboard
+                    </h5>
+                    <p class="text-muted mb-4">Top students who are most recently active in the College Buddy community</p>
+                    
+                    <!-- Top 3 Students -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h6 class="text-center mb-4">🌟 Top Contributors</h6>
+                        </div>
+                        
+                        <!-- #1 Student -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center border-0" style="background: var(--bg-secondary);">
+                                <div class="card-body">
+                                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%); border-radius: 50%; color: #333; font-weight: bold; font-size: 1.2rem; margin-bottom: 1rem;">1</div>
+                                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; color: white; font-size: 1.5rem; margin-bottom: 1rem;">A</div>
+                                    <h6 class="mb-2">Alex Johnson</h6>
+                                    <p class="text-muted mb-2">Computer Science, MIT</p>
+                                    <div class="badge" style="background: var(--gradient-secondary); color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem; font-weight: 600;">2,450 points</div>
+                                    <div class="mt-2 small">
+                                        <i class="fas fa-circle text-success me-1"></i>
+                                        Active 5 minutes ago
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- #2 Student -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center border-0" style="background: var(--bg-secondary);">
+                                <div class="card-body">
+                                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: linear-gradient(135deg, #c0c0c0 0%, #e2e8f0 100%); border-radius: 50%; color: #333; font-weight: bold; font-size: 1.2rem; margin-bottom: 1rem;">2</div>
+                                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; color: white; font-size: 1.5rem; margin-bottom: 1rem;">S</div>
+                                    <h6 class="mb-2">Sarah Chen</h6>
+                                    <p class="text-muted mb-2">Business, Stanford</p>
+                                    <div class="badge" style="background: var(--gradient-secondary); color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem; font-weight: 600;">2,100 points</div>
+                                    <div class="mt-2 small">
+                                        <i class="fas fa-circle text-success me-1"></i>
+                                        Active 12 minutes ago
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- #3 Student -->
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center border-0" style="background: var(--bg-secondary);">
+                                <div class="card-body">
+                                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background: linear-gradient(135deg, #cd7f32 0%, #d69e2e 100%); border-radius: 50%; color: white; font-weight: bold; font-size: 1.2rem; margin-bottom: 1rem;">3</div>
+                                    <div class="d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background: var(--gradient-primary); border-radius: 50%; color: white; font-size: 1.5rem; margin-bottom: 1rem;">M</div>
+                                    <h6 class="mb-2">Marcus Williams</h6>
+                                    <p class="text-muted mb-2">Engineering, Harvard</p>
+                                    <div class="badge" style="background: var(--gradient-secondary); color: white; padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.875rem; font-weight: 600;">1,950 points</div>
+                                    <div class="mt-2 small">
+                                        <i class="fas fa-circle text-warning me-1"></i>
+                                        Active 1 hour ago
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Remaining Students -->
+                    <div class="mt-4">
+                        <h6 class="mb-3">Other Active Students</h6>
+                        <div class="list-group">
+                            <div class="list-group-item border-0" style="background: var(--bg-primary);">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3" style="width: 30px; height: 30px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">4</div>
+                                    <div class="me-3" style="width: 40px; height: 40px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">E</div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Emily Rodriguez</h6>
+                                        <small class="text-muted">Design, UC Berkeley - 1,800 points</small>
+                                    </div>
+                                    <small class="text-muted">2 hours ago</small>
+                                </div>
+                            </div>
+                            <div class="list-group-item border-0" style="background: var(--bg-primary);">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3" style="width: 30px; height: 30px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">5</div>
+                                    <div class="me-3" style="width: 40px; height: 40px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">D</div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">David Kim</h6>
+                                        <small class="text-muted">Cybersecurity, CMU - 1,650 points</small>
+                                    </div>
+                                    <small class="text-muted">3 hours ago</small>
+                                </div>
+                            </div>
+                            <div class="list-group-item border-0" style="background: var(--bg-primary);">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3" style="width: 30px; height: 30px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">6</div>
+                                    <div class="me-3" style="width: 40px; height: 40px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">M</div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">Maya Patel</h6>
+                                        <small class="text-muted">Mobile Dev, Georgia Tech - 1,500 points</small>
+                                    </div>
+                                    <small class="text-muted">5 hours ago</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

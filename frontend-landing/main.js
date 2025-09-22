@@ -339,11 +339,13 @@ function setupSocialAuthHandlers() {
                 const result = await auth.signInWithPopup(provider);
                 const user = result.user;
                 await ensureUserProfile(user, { provider: 'google' });
-                showNotification('Signed in ✅', `Welcome ${user.displayName || user.email}!`, 'success');
-                const signupModalEl = document.getElementById('signupModal');
-                const loginModalEl = document.getElementById('loginModal');
+                showNotification('Signed in ✅', `Welcome ${user.displayName || user.email}! Redirecting to discover page...`, 'success');
+                const signupModalEl = document.getElementById('authModal');
                 if (signupModalEl) bootstrap.Modal.getInstance(signupModalEl)?.hide();
-                if (loginModalEl) bootstrap.Modal.getInstance(loginModalEl)?.hide();
+                // Redirect to discover page after successful sign-in
+                setTimeout(() => {
+                    window.location.href = '../frontend-profile/discover.html';
+                }, 1500);
             } catch (e) {
                 console.error('Google sign-in error', e);
                 // Common provider misconfig error
@@ -427,10 +429,14 @@ async function handleSignupSubmission(e) {
             firstName, lastName, college, branch: major
         });
 
-        showNotification('Welcome to College Buddy! 🎉', `Hi ${firstName}! We created your account. Please verify your email.`, 'success');
+        showNotification('Welcome to College Buddy! 🎉', `Hi ${firstName}! We created your account. Redirecting to discover page...`, 'success');
 
-        const modal = bootstrap.Modal.getInstance(document.getElementById('signupModal'));
+        const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
         if (modal) modal.hide();
+        // Redirect to discover page after successful signup
+        setTimeout(() => {
+            window.location.href = '../frontend-profile/discover.html';
+        }, 1500);
     } catch (e2) {
         console.error('Signup error', e2);
         showNotification('Signup failed', e2.message || 'Could not create your account.', 'danger');
@@ -453,9 +459,13 @@ async function handleLoginSubmission(e) {
     try {
         const cred = await auth.signInWithEmailAndPassword(email, password);
         const user = cred.user;
-        showNotification('Welcome Back! 👋', `Signed in as ${user.email}.`, 'success');
-        const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+        showNotification('Welcome Back! 👋', `Signed in as ${user.email}. Redirecting to discover page...`, 'success');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
         if (modal) modal.hide();
+        // Redirect to discover page after successful email sign-in
+        setTimeout(() => {
+            window.location.href = '../frontend-profile/discover.html';
+        }, 1500);
     } catch (e2) {
         console.error('Login error', e2);
         showNotification('Login failed', e2.message || 'Could not sign you in.', 'danger');

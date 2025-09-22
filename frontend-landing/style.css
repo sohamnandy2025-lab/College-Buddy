@@ -178,11 +178,12 @@ html {
 
 .hero-description {
     font-size: 1.25rem;
-    color: #555;
+    color: var(--text-primary);
     max-width: 600px;
     margin: 0 auto;
     text-align: center;
     line-height: 1.6;
+    font-weight: 500;
 }
 
 @keyframes slideInUp {
@@ -231,6 +232,8 @@ html {
     opacity: 0;
     transform: translateX(-30px);
     animation: slideInLeft 0.8s ease-out forwards;
+    color: var(--text-primary);
+    font-weight: 500;
 }
 
 .feature-item:nth-child(1) { animation-delay: 0.2s; }
@@ -466,6 +469,60 @@ html {
 
 [data-theme="dark"] .about-section {
     background: var(--bg-secondary);
+}
+
+/* Text visibility fixes */
+.how-it-works-section {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.how-it-works-section h2,
+.how-it-works-section h5 {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.how-it-works-section p {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Ensure all text elements have proper visibility */
+.text-muted {
+    color: var(--text-secondary) !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+p {
+    color: var(--text-secondary);
+}
+
+.lead {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.card-title {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+}
+
+.navbar-brand,
+.nav-link {
+    color: var(--text-primary) !important;
+}
+
+.btn {
+    font-weight: 600;
+}
+
+.badge {
+    font-weight: 600;
 }
 
 .feature-box {
