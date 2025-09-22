@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Buddy - Connect, Learn, Grow</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold college-buddy-logo" href="#home">
+                <i class="fas fa-graduation-cap me-2"></i>
+                <span class="brand-text">College Buddy</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="discover.html">Discover</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="profile.html">Profile</a>
+                    </li>
+                </ul>
+                
+                <!-- Top-right authentication section -->
+                <div class="auth-section d-flex align-items-center">
+                    <div class="auth-description me-3 d-none d-lg-block">
+                        <small class="text-light fw-light">
+                            🌟 Connect with students nationwide • Build your network
+                        </small>
+                    </div>
+                    <div class="auth-buttons">
+                        <a href="login.html" class="btn btn-outline-light btn-sm me-2" id="navLoginBtn">
+                            <i class="fas fa-sign-in-alt me-1"></i>Login
+                        </a>
+                        <a href="#signup" class="btn btn-light btn-sm text-primary fw-bold" id="navSignupBtn">
+                            <i class="fas fa-user-plus me-1"></i>Sign Up
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <div class="hero-brand-emphasis mb-4">
+                            <h1 class="display-3 fw-bold college-buddy-title mb-3">
+                                <span class="text-gradient-large">College Buddy</span>
+                            </h1>
+                            <div class="brand-tagline">
+                                <span class="badge bg-primary-gradient fs-6 px-3 py-2 rounded-pill">
+                                    🎓 Where Students Connect & Grow Together
+                                </span>
+                            </div>
+                        </div>
+                        <p class="lead mb-4 hero-description">
+                            The ultimate networking platform for college students! Connect with peers from universities nationwide, 
+                            discover exciting events, participate in hackathons, and build meaningful 
+                            relationships that will shape your future career.
+                        </p>
+                        
+                        <!-- Feature highlights -->
+                        <div class="feature-list mb-5">
+                            <div class="feature-item">
+                                <i class="fas fa-users text-primary me-2"></i>
+                                <span>Connect with students from your college and beyond</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-calendar-alt text-primary me-2"></i>
+                                <span>Stay updated with events and hackathons</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-comments text-primary me-2"></i>
+                                <span>Chat and collaborate with peers</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-trophy text-primary me-2"></i>
+                                <span>Participate in quizzes and competitions</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Action buttons -->
+                        <div class="hero-buttons">
+                            <a href="discover.html" class="btn btn-primary btn-lg me-3 mb-2">
+                                <i class="fas fa-compass me-2"></i>Start Discovering
+                            </a>
+                            <a href="#about" class="btn btn-outline-primary btn-lg me-3 mb-2" id="aboutBtn">
+                                <i class="fas fa-info-circle me-2"></i>Learn More
+                            </a>
+                            <a href="#features" class="btn btn-secondary btn-lg mb-2" id="featuresBtn">
+                                <i class="fas fa-star me-2"></i>Features
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="hero-image text-center">
+                        <div class="illustration">
+                            <i class="fas fa-graduation-cap hero-icon"></i>
+                            <div class="floating-elements">
+                                <div class="floating-card card-1">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="floating-card card-2">
+                                    <i class="fas fa-calendar"></i>
+                                </div>
+                                <div class="floating-card card-3">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="floating-card card-4">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section (Hidden by default, shown when About button is clicked) -->
+    <section id="about" class="about-section py-5 d-none">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h2 class="mb-4">About College Buddy</h2>
+                    <p class="lead">
+                        College Buddy is a free college networking and event platform built to help 
+                        students connect, collaborate, and grow together. Whether you're looking for 
+                        study partners, project collaborators, or just want to expand your network, 
+                        we've got you covered!
+                    </p>
+                    <div class="row mt-5">
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-box">
+                                <i class="fas fa-search fa-3x text-primary mb-3"></i>
+                                <h5>Smart Search</h5>
+                                <p>Find students by college, branch, skills, and hobbies</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-box">
+                                <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
+                                <h5>Event Updates</h5>
+                                <p>Never miss important events, hackathons, and competitions</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="feature-box">
+                                <i class="fas fa-brain fa-3x text-primary mb-3"></i>
+                                <h5>Interactive Quizzes</h5>
+                                <p>Test your knowledge with fun quizzes hosted in the app</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 College Buddy. Built with ❤️ for students, by students.</p>
+            <div class="social-links mt-3">
+                <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-light"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="main.js"></script>
+</body>
+</html>
