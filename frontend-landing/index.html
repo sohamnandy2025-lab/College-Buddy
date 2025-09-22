@@ -353,8 +353,17 @@
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
-    <!-- Firebase config (create frontend-landing/firebase-config.js from the provided example) -->
-    <script src="firebase-config.js"></script>
+    <!-- Inline Firebase config (optional): place your Firebase Web App config JSON below. Example:
+    {
+      "apiKey": "...",
+      "authDomain": "<project>.firebaseapp.com",
+      "projectId": "<project>",
+      "storageBucket": "<project>.appspot.com",
+      "messagingSenderId": "...",
+      "appId": "..."
+    }
+    Do NOT commit real secrets to public repositories. Prefer local overrides. -->
+    <script id="firebase-config" type="application/json">{}</script>
 
     <!-- Custom JavaScript -->
     <script src="main.js"></script>

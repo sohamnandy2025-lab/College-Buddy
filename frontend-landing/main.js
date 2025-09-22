@@ -323,7 +323,7 @@ function setupSocialAuthHandlers() {
     googleButtons.forEach(btn => {
         btn.addEventListener('click', async () => {
             if (!auth) {
-                showNotification('Configure Firebase', 'Please set up firebase-config.js to enable Google sign-in.', 'warning');
+                showNotification('Configure Firebase', 'Please add your Firebase config JSON into index.html (script#firebase-config) and enable Google provider in Firebase Console.', 'warning');
                 return;
             }
             try {
@@ -381,7 +381,7 @@ function setupFormHandlers() {
 async function handleSignupSubmission(e) {
     e.preventDefault();
     if (!auth || !db) {
-        showNotification('Configure Firebase', 'Please set up firebase-config.js to enable sign up.', 'warning');
+        showNotification('Configure Firebase', 'Please add your Firebase config JSON into index.html (script#firebase-config) and enable Email/Password provider in Firebase Console. Also open the page via http://localhost (not file://) and add localhost to Authorized domains.', 'warning');
         return;
     }
 
@@ -397,7 +397,14 @@ async function handleSignupSubmission(e) {
         const cred = await auth.createUserWithEmailAndPassword(email, password);
         const user = cred.user;
         try { await user.updateProfile({ displayName: `${firstName} ${lastName}`.trim() }); } catch (_) {}
-        try { await user.sendEmailVerification(); } catch (_) {}
+        // Send verification email with a safe continue URL if running on http(s)
+        try {
+            const actionCodeSettings = (location.protocol === 'http:' || location.protocol === 'https:') ? {
+                url: location.origin + '/?verified=1',
+                handleCodeInApp: false
+            } : undefined;
+            await user.sendEmailVerification(actionCodeSettings);
+        } catch (_) {}
 
         await ensureUserProfile(user, {
             firstName, lastName, college, branch: major
@@ -419,7 +426,7 @@ async function handleSignupSubmission(e) {
 async function handleLoginSubmission(e) {
     e.preventDefault();
     if (!auth) {
-        showNotification('Configure Firebase', 'Please set up firebase-config.js to enable sign in.', 'warning');
+        showNotification('Configure Firebase', 'Please add your Firebase config JSON into index.html (script#firebase-config). Make sure Email/Password provider is enabled and this domain is in Authorized domains.', 'warning');
         return;
     }
 
@@ -743,9 +750,19 @@ function handleFormSubmission(formData) {
 // Firebase initialization and helpers
 function initializeFirebase() {
     try {
-        const cfg = window.COLLEGE_BUDDY_FIREBASE_CONFIG;
-        if (!cfg) { console.warn('firebase-config.js not found or empty'); return; }
         if (!window.firebase || !window.firebase.initializeApp) { console.warn('Firebase SDK not loaded'); return; }
+        let cfg = window.COLLEGE_BUDDY_FIREBASE_CONFIG;
+        if (!cfg) {
+            // Try reading inline JSON from <script id="firebase-config" type="application/json">
+            const el = document.getElementById('firebase-config');
+            if (el && el.textContent) {
+                try { const parsed = JSON.parse(el.textContent.trim() || '{}'); if (Object.keys(parsed).length) cfg = parsed; } catch(_) {}
+            }
+        }
+        if (!cfg || !cfg.apiKey) {
+            console.warn('Firebase config missing. Add JSON to <script id="firebase-config"> in index.html.');
+            return; // leave auth/db null; UI will show helpful notifications
+        }
         if (!fbApp) fbApp = firebase.initializeApp(cfg);
         auth = firebase.auth();
         db = firebase.firestore();
