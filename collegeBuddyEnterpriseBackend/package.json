@@ -1,0 +1,36 @@
+{
+  "name": "college-buddy-enterprise-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js",
+    "lint": "eslint .",
+    "test": "jest --runInBand"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "pino": "^9.3.2",
+    "pino-http": "^8.6.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "compression": "^1.7.4",
+    "uuid": "^9.0.1",
+    "ioredis": "^5.4.1",
+    "neo4j-driver": "^5.22.1",
+    "ws": "^8.18.0",
+    "firebase-admin": "^12.6.0",
+    "@google-cloud/firestore": "^7.9.0",
+    "@google-cloud/pubsub": "^7.7.0",
+    "algoliasearch": "^5.7.0",
+    "ajv": "^8.17.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
+    "eslint": "^9.9.0"
+  }
+}
