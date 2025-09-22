@@ -398,6 +398,39 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1100;
+        }
+        
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-primary);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .nav-item {
+            position: relative;
         }
     </style>
 </head>
@@ -427,21 +460,23 @@
                     </a></li>
                     <li><a href="notifications.html" class="nav-item">
                         <i class="fas fa-bell me-1"></i>Notifications
+                        <span class="notification-badge" id="notificationCount">5</span>
                     </a></li>
                 </ul>
 
-                <!-- Header Controls -->
-                <div class="header-controls">
-                    <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggle">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <button class="btn btn-outline-danger btn-sm" onclick="logout()">
-                        <i class="fas fa-sign-out-alt me-1"></i>Logout
-                    </button>
-                </div>
+                <button class="btn btn-outline-danger btn-sm ms-auto" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
+                </button>
             </div>
         </div>
     </nav>
+    
+    <!-- Theme Toggle Button - Fixed Top Right -->
+    <div class="header-controls">
+        <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
 
     <!-- Hero Section -->
     <div class="hero-section">
