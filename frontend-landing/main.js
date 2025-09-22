@@ -3,6 +3,7 @@
 let fbApp = null;
 let auth = null;
 let db = null;
+let demoMode = false;
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -325,19 +326,24 @@ function setupSocialAuthHandlers() {
     const googleButtons = document.querySelectorAll('#googleSignup, #googleLogin');
     googleButtons.forEach(btn => {
         btn.addEventListener('click', async () => {
-            if (!auth) {
+            if (!auth && !demoMode) {
                 // If Firebase not initialized, open config modal for quick setup
                 const modalEl = document.getElementById('firebaseConfigModal');
                 if (modalEl && typeof bootstrap !== 'undefined') {
                     new bootstrap.Modal(modalEl).show();
                 }
-                showNotification('Configure Firebase', 'Paste your Firebase config JSON (Project settings → General → Your apps) and enable Google provider in Firebase Console.', 'warning');
+                showNotification('Configure Firebase', 'Paste your Firebase config JSON (Project settings → General → Your apps) and enable Google provider in Firebase Console. Or use Local Demo Mode.', 'warning');
                 return;
             }
             try {
-                const provider = new firebase.auth.GoogleAuthProvider();
-                const result = await auth.signInWithPopup(provider);
-                const user = result.user;
+                let user;
+                if (demoMode) {
+                    user = await demoSignInWithGoogle();
+                } else {
+                    const provider = new firebase.auth.GoogleAuthProvider();
+                    const result = await auth.signInWithPopup(provider);
+                    user = result.user;
+                }
                 await ensureUserProfile(user, { provider: 'google' });
                 showNotification('Signed in ✅', `Welcome ${user.displayName || user.email}!`, 'success');
                 const signupModalEl = document.getElementById('signupModal');
@@ -397,13 +403,12 @@ function setupFormHandlers() {
  */
 async function handleSignupSubmission(e) {
     e.preventDefault();
-    if (!auth || !db) {
-        showNotification('Configure Firebase', 'Please add your Firebase config JSON into index.html (script#firebase-config) and enable Email/Password provider in Firebase Console. Also open the page via http://localhost (not file://) and add localhost to Authorized domains.', 'warning');
+    if ((!auth || !db) && !demoMode) {
+        showNotification('Configure Firebase', 'Add your Firebase config (Config button) and enable Email/Password provider. Or use Local Demo Mode. Open via http://localhost and add localhost to Authorized domains.', 'warning');
         return;
     }
 
     try {
-        const form = e.target;
         const firstName = document.getElementById('firstName').value.trim();
         const lastName = document.getElementById('lastName').value.trim();
         const email = document.getElementById('email').value.trim();
@@ -411,23 +416,28 @@ async function handleSignupSubmission(e) {
         const major = document.getElementById('major').value.trim();
         const password = document.getElementById('password').value;
 
-        const cred = await auth.createUserWithEmailAndPassword(email, password);
-        const user = cred.user;
-        try { await user.updateProfile({ displayName: `${firstName} ${lastName}`.trim() }); } catch (_) {}
-        // Send verification email with a safe continue URL if running on http(s)
-        try {
-            const actionCodeSettings = (location.protocol === 'http:' || location.protocol === 'https:') ? {
-                url: location.origin + '/?verified=1',
-                handleCodeInApp: false
-            } : undefined;
-            await user.sendEmailVerification(actionCodeSettings);
-        } catch (_) {}
+        let user;
+        if (demoMode) {
+            user = await demoCreateUser(email, password, `${firstName} ${lastName}`.trim());
+        } else {
+            const cred = await auth.createUserWithEmailAndPassword(email, password);
+            user = cred.user;
+            try { await user.updateProfile({ displayName: `${firstName} ${lastName}`.trim() }); } catch (_) {}
+            // Send verification email with a safe continue URL if running on http(s)
+            try {
+                const actionCodeSettings = (location.protocol === 'http:' || location.protocol === 'https:') ? {
+                    url: location.origin + '/?verified=1',
+                    handleCodeInApp: false
+                } : undefined;
+                await user.sendEmailVerification(actionCodeSettings);
+            } catch (_) {}
+        }
 
         await ensureUserProfile(user, {
             firstName, lastName, college, branch: major
         });
 
-        showNotification('Welcome to College Buddy! 🎉', `Hi ${firstName}! We created your account. Please verify your email.`, 'success');
+        showNotification('Welcome to College Buddy! 🎉', `Hi ${firstName}! Your account is ready${demoMode ? ' (demo mode)' : ''}.`, 'success');
 
         const modal = bootstrap.Modal.getInstance(document.getElementById('signupModal'));
         if (modal) modal.hide();
@@ -442,8 +452,8 @@ async function handleSignupSubmission(e) {
  */
 async function handleLoginSubmission(e) {
     e.preventDefault();
-    if (!auth) {
-        showNotification('Configure Firebase', 'Please add your Firebase config JSON into index.html (script#firebase-config). Make sure Email/Password provider is enabled and this domain is in Authorized domains.', 'warning');
+    if (!auth && !demoMode) {
+        showNotification('Configure Firebase', 'Add your Firebase config (Config button). Make sure Email/Password provider is enabled and this domain is in Authorized domains. Or use Local Demo Mode.', 'warning');
         return;
     }
 
@@ -451,9 +461,14 @@ async function handleLoginSubmission(e) {
     const password = document.getElementById('loginPassword').value;
 
     try {
-        const cred = await auth.signInWithEmailAndPassword(email, password);
-        const user = cred.user;
-        showNotification('Welcome Back! 👋', `Signed in as ${user.email}.`, 'success');
+        let user;
+        if (demoMode) {
+            user = await demoSignIn(email, password);
+        } else {
+            const cred = await auth.signInWithEmailAndPassword(email, password);
+            user = cred.user;
+        }
+        showNotification('Welcome Back! 👋', `Signed in as ${user.email || user.displayName}.`, 'success');
         const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
         if (modal) modal.hide();
     } catch (e2) {
@@ -804,63 +819,115 @@ function initializeFirebase() {
 }
 
 async function ensureUserProfile(user, extra = {}) {
-    if (!db || !user) return;
-    const ref = db.collection('users').doc(user.uid);
-    const snap = await ref.get();
-    const now = firebase.firestore.FieldValue.serverTimestamp();
-    if (!snap.exists) {
-        const displayName = user.displayName || '';
-        const [firstName, ...rest] = displayName.split(' ');
-        const lastName = rest.join(' ');
-        const base = {
-            uid: user.uid,
-            name: displayName || extra.firstName ? `${extra.firstName || ''} ${extra.lastName || ''}`.trim() : (user.email || ''),
-            firstName: extra.firstName || firstName || '',
-            lastName: extra.lastName || lastName || '',
-            email: user.email || '',
-            college: extra.college || '',
-            branch: extra.branch || '',
-            friends: [],
-            createdAt: now,
-            updatedAt: now,
-        };
-        const tokens = buildSearchTokens(base);
-        await ref.set({ ...base, searchIndex: tokens }, { merge: true });
-    } else {
-        await ref.set({ updatedAt: now }, { merge: true });
+    if (!user) return;
+    const displayName = user.displayName || '';
+    const [firstNameGuess, ...rest] = displayName.split(' ');
+    const lastNameGuess = rest.join(' ');
+    const base = {
+        uid: user.uid,
+        name: displayName || (extra.firstName || '') + ' ' + (extra.lastName || ''),
+        firstName: extra.firstName || firstNameGuess || '',
+        lastName: extra.lastName || lastNameGuess || '',
+        email: user.email || '',
+        college: extra.college || '',
+        branch: extra.branch || '',
+        friends: [],
+    };
+    if (db) {
+        const ref = db.collection('users').doc(user.uid);
+        const snap = await ref.get();
+        const now = firebase.firestore.FieldValue.serverTimestamp();
+        if (!snap.exists) {
+            const tokens = buildSearchTokens(base);
+            await ref.set({ ...base, searchIndex: tokens, createdAt: now, updatedAt: now }, { merge: true });
+        } else {
+            await ref.set({ updatedAt: now }, { merge: true });
+        }
+    } else if (demoMode) {
+        // Store locally
+        const key = 'collegeBuddyDemoProfiles';
+        const all = JSON.parse(localStorage.getItem(key) || '{}');
+        all[user.uid] = { ...base, createdAt: Date.now(), updatedAt: Date.now() };
+        localStorage.setItem(key, JSON.stringify(all));
     }
 }
 
 function setupFirebaseConfigModal() {
     const saveBtn = document.getElementById('saveFirebaseConfigBtn');
+    const demoBtn = document.getElementById('useDemoModeBtn');
     const textarea = document.getElementById('firebaseConfigTextarea');
-    if (!saveBtn || !textarea) return;
-    saveBtn.addEventListener('click', () => {
-        try {
-            const text = textarea.value.trim();
-            const cfg = JSON.parse(text);
-            const required = ['apiKey', 'authDomain', 'projectId', 'appId'];
-            for (const k of required) {
-                if (!cfg[k]) throw new Error(`Missing ${k}`);
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            try {
+                const text = (textarea?.value || '').trim();
+                const cfg = JSON.parse(text);
+                const required = ['apiKey', 'authDomain', 'projectId', 'appId'];
+                for (const k of required) {
+                    if (!cfg[k]) throw new Error(`Missing ${k}`);
+                }
+                // Save to localStorage so it persists without committing to Git
+                localStorage.setItem('collegeBuddyFirebaseConfig', JSON.stringify(cfg));
+                // Also reflect into inline script tag for immediate use
+                const el = document.getElementById('firebase-config');
+                if (el) el.textContent = JSON.stringify(cfg);
+                // Re-initialize Firebase
+                initializeFirebase();
+                // Close modal
+                const modalEl = document.getElementById('firebaseConfigModal');
+                if (modalEl && typeof bootstrap !== 'undefined') {
+                    bootstrap.Modal.getInstance(modalEl)?.hide();
+                }
+                showNotification('Firebase configured', 'Your Firebase config has been saved locally. You can now sign in.', 'success');
+            } catch (e) {
+                console.error('Invalid Firebase config', e);
+                showNotification('Invalid config', e.message || 'Please paste a valid Firebase Web App config JSON.', 'danger');
             }
-            // Save to localStorage so it persists without committing to Git
-            localStorage.setItem('collegeBuddyFirebaseConfig', JSON.stringify(cfg));
-            // Also reflect into inline script tag for immediate use
-            const el = document.getElementById('firebase-config');
-            if (el) el.textContent = JSON.stringify(cfg);
-            // Re-initialize Firebase
-            initializeFirebase();
+        });
+    }
+    if (demoBtn) {
+        demoBtn.addEventListener('click', () => {
+            demoMode = true;
             // Close modal
             const modalEl = document.getElementById('firebaseConfigModal');
             if (modalEl && typeof bootstrap !== 'undefined') {
                 bootstrap.Modal.getInstance(modalEl)?.hide();
             }
-            showNotification('Firebase configured', 'Your Firebase config has been saved locally. You can now sign in.', 'success');
-        } catch (e) {
-            console.error('Invalid Firebase config', e);
-            showNotification('Invalid config', e.message || 'Please paste a valid Firebase Web App config JSON.', 'danger');
-        }
-    });
+            showNotification('Demo mode enabled', 'Running locally without Firebase. Sign-up/sign-in will be stored only in your browser.', 'info');
+        });
+    }
+}
+
+// Demo-mode helpers
+function demoUsers() {
+    return JSON.parse(localStorage.getItem('collegeBuddyDemoUsers') || '{}');
+}
+function saveDemoUsers(map) {
+    localStorage.setItem('collegeBuddyDemoUsers', JSON.stringify(map));
+}
+function makeDemoUser(email, displayName) {
+    return { uid: 'demo_' + btoa(email).replace(/=+$/,''), email, displayName };
+}
+async function demoCreateUser(email, password, displayName) {
+    const users = demoUsers();
+    if (users[email]) throw new Error('Account already exists');
+    users[email] = { password, displayName };
+    saveDemoUsers(users);
+    return makeDemoUser(email, displayName);
+}
+async function demoSignIn(email, password) {
+    const users = demoUsers();
+    if (!users[email] || users[email].password !== password) throw new Error('Invalid email or password');
+    return makeDemoUser(email, users[email].displayName);
+}
+async function demoSignInWithGoogle() {
+    // Create a demo Google account
+    const email = 'demo.google.user@example.com';
+    const users = demoUsers();
+    if (!users[email]) {
+        users[email] = { password: null, displayName: 'Demo Google User' };
+        saveDemoUsers(users);
+    }
+    return makeDemoUser(email, users[email].displayName);
 }
 
 function buildSearchTokens(u) {
