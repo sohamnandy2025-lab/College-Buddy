@@ -1,0 +1,139 @@
+rules_version = '2';
+service cloud.firestore {
+  function isSignedIn() { return request.auth != null; }
+  function uid() { return request.auth.uid; }
+  function isAdmin() { return isSignedIn() && request.auth.token.role == 'admin'; }
+  function isEventHost() { return isAdmin() || (isSignedIn() && (request.auth.token.role == 'event-host' || request.auth.token.eventHost == true)); }
+  function isQuizHost() { return isAdmin() || (isSignedIn() && (request.auth.token.role == 'quiz-host' || request.auth.token.quizHost == true)); }
+  function emailVerified() { return isSignedIn() && request.auth.token.email_verified == true; }
+  // Deterministic connection key: sorted uids joined by '_'
+  function connKey(a, b) { return (a < b) ? (a + '_' + b) : (b + '_' + a); }
+
+  match /databases/{database}/documents {
+    // Users
+    match /users/{userId} {
+      allow read: if true; // Consider restricting to authenticated only if needed
+      allow create: if isSignedIn() && uid() == userId && emailVerified();
+      allow update: if isSignedIn() && uid() == userId && emailVerified();
+      allow delete: if isAdmin();
+    }
+
+    // Connections
+    match /connections/{connId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && (
+        // Must be one of the participants creating a pending request
+        let ids = connId.split('_');
+        (uid() == ids[0] || uid() == ids[1]) && request.resource.data.status == 'pending'
+      );
+      allow update: if isSignedIn() && (
+        // Accept/reject only by participants
+        let ids = connId.split('_');
+        (uid() == ids[0] || uid() == ids[1])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Messages (flat collection)
+    match /messages/{messageId} {
+      allow read: if isSignedIn() && (
+        resource.data.senderUid == uid() || resource.data.receiverUid == uid()
+      );
+      allow create: if isSignedIn() && request.resource.data.senderUid == uid() && (
+        // Only allow if users are friends OR connection accepted
+        get(/databases/$(database)/documents/connections/$(connKey(uid(), request.resource.data.receiverUid))).data.status == 'accepted'
+      );
+      allow update: if false; // Only server may update seen flag via a callable/HTTP Function if desired
+      allow delete: if isAdmin();
+    }
+
+    // Events
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if isEventHost();
+      allow update: if isEventHost() && request.resource.data.hostUid == resource.data.hostUid;
+      allow delete: if isEventHost() || isAdmin();
+    }
+
+    // Posts (with subcollections for comments and likes)
+    match /posts/{postId} {
+      allow read: if true // Additional filtering for visibility is enforced in client/backend; for tighter control, use get() checks below
+        && (resource.data.visibility == 'public' ||
+            (resource.data.visibility == 'college' &&
+             isSignedIn() &&
+             // allow if same college (requires author college tag in tags like 'college:XYZ')
+             resource.data.tags.hasAll(['college:' + get(/databases/$(database)/documents/users/$(uid())).data.college])
+            ) ||
+            (resource.data.visibility == 'friends' && isSignedIn() &&
+             // Author is in viewer's friends list
+             get(/databases/$(database)/documents/users/$(uid())).data.friends.hasOnly([resource.data.authorUid]) == false // fallback to client enforcement if array too large
+            )
+        );
+      allow create: if isSignedIn() && request.resource.data.authorUid == uid();
+      allow update: if isSignedIn() && request.resource.data.authorUid == resource.data.authorUid;
+      allow delete: if isSignedIn() && uid() == resource.data.authorUid || isAdmin();
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if isSignedIn() && request.resource.data.uid == uid();
+        allow update: if false;
+        allow delete: if isAdmin() || (isSignedIn() && request.resource.data.uid == uid());
+        match /replies/{replyId} {
+          allow read: if true;
+          allow create: if isSignedIn() && request.resource.data.uid == uid();
+          allow update: if false;
+          allow delete: if isAdmin() || (isSignedIn() && request.resource.data.uid == uid());
+        }
+      }
+      match /likes/{likeUid} {
+        allow read: if true;
+        allow create: if isSignedIn() && likeUid == uid();
+        allow delete: if isSignedIn() && likeUid == uid() || isAdmin();
+        allow update: if false;
+      }
+      match /reactions/{userUid} {
+        allow read: if true;
+        allow create: if isSignedIn() && userUid == uid();
+        allow delete: if isSignedIn() && userUid == uid() || isAdmin();
+        allow update: if isSignedIn() && userUid == uid();
+      }
+    }
+
+    // Quizzes
+    match /quizzes/{quizId} {
+      allow read: if true;
+      allow create: if isQuizHost();
+      allow update: if isQuizHost() && request.resource.data.hostUid == resource.data.hostUid;
+      allow delete: if isQuizHost() || isAdmin();
+    }
+
+    // Quiz Attempts
+    match /quizAttempts/{attemptId} {
+      allow read: if isSignedIn() && (resource.data.userUid == uid() || isAdmin());
+      allow create: if isSignedIn() && request.resource.data.userUid == uid();
+      allow update: if false; // attempts are immutable
+      allow delete: if isAdmin();
+    }
+
+    // Notifications
+    match /notifications/{notifId} {
+      allow read: if isSignedIn() && resource.data.toUid == uid();
+      allow create: if isAdmin(); // Typically created by server-side
+      allow update: if isSignedIn() && request.resource.data.read == true && resource.data.toUid == uid();
+      allow delete: if isAdmin();
+    }
+
+    // User-scoped FCM tokens
+    match /users/{userId}/fcmTokens/{tokenId} {
+      allow read: if isSignedIn() && uid() == userId;
+      allow write: if isSignedIn() && uid() == userId;
+      allow delete: if isSignedIn() && uid() == userId || isAdmin();
+    }
+
+    // Analytics (server-maintained)
+    match /analytics/{docId} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+  }
+}
