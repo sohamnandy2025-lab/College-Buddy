@@ -33,12 +33,23 @@
                         <a class="nav-link" href="#home">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="discover.html">Discover</a>
+                        <a class="nav-link" href="search.html" id="smartSearchBtn">
+                            <i class="fas fa-search me-1"></i>Smart Search
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="profile.html">Profile</a>
+                        <a class="nav-link" href="discover.html">
+                            <i class="fas fa-users me-1"></i>Discover
+                        </a>
                     </li>
                 </ul>
+                
+                <!-- Dark/Light Mode Toggle -->
+                <div class="theme-toggle me-3">
+                    <button class="btn btn-outline-light btn-sm" id="themeToggle">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                </div>
                 
                 <!-- Top-right authentication section -->
                 <div class="auth-section d-flex align-items-center">
@@ -48,12 +59,9 @@
                         </small>
                     </div>
                     <div class="auth-buttons">
-                        <a href="login.html" class="btn btn-outline-light btn-sm me-2" id="navLoginBtn">
-                            <i class="fas fa-sign-in-alt me-1"></i>Login
-                        </a>
-                        <a href="#signup" class="btn btn-light btn-sm text-primary fw-bold" id="navSignupBtn">
-                            <i class="fas fa-user-plus me-1"></i>Sign Up
-                        </a>
+                        <button class="btn btn-light btn-lg text-primary fw-bold px-4" id="navSignupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">
+                            <i class="fas fa-user-plus me-2"></i>Join College Buddy
+                        </button>
                     </div>
                 </div>
             </div>
@@ -77,41 +85,41 @@
                             </div>
                         </div>
                         <p class="lead mb-4 hero-description">
-                            The ultimate networking platform for college students! Connect with peers from universities nationwide, 
-                            discover exciting events, participate in hackathons, and build meaningful 
-                            relationships that will shape your future career.
+                            The ultimate networking platform for college students! Connect with amazing peers from universities nationwide, 
+                            share experiences, collaborate on projects, and build lifelong friendships 
+                            that will enrich your college journey and beyond.
                         </p>
                         
                         <!-- Feature highlights -->
                         <div class="feature-list mb-5">
                             <div class="feature-item">
                                 <i class="fas fa-users text-primary me-2"></i>
-                                <span>Connect with students from your college and beyond</span>
+                                <span>Connect with students from colleges across the country</span>
                             </div>
                             <div class="feature-item">
-                                <i class="fas fa-calendar-alt text-primary me-2"></i>
-                                <span>Stay updated with events and hackathons</span>
+                                <i class="fas fa-search text-primary me-2"></i>
+                                <span>Smart search to find students by interests, skills & college</span>
                             </div>
                             <div class="feature-item">
                                 <i class="fas fa-comments text-primary me-2"></i>
-                                <span>Chat and collaborate with peers</span>
+                                <span>Chat, collaborate and share experiences with peers</span>
                             </div>
                             <div class="feature-item">
-                                <i class="fas fa-trophy text-primary me-2"></i>
-                                <span>Participate in quizzes and competitions</span>
+                                <i class="fas fa-heart text-primary me-2"></i>
+                                <span>Build meaningful friendships and study partnerships</span>
                             </div>
                         </div>
                         
                         <!-- Action buttons -->
                         <div class="hero-buttons">
-                            <a href="discover.html" class="btn btn-primary btn-lg me-3 mb-2">
-                                <i class="fas fa-compass me-2"></i>Start Discovering
+                            <button class="btn btn-primary btn-lg me-3 mb-2" data-bs-toggle="modal" data-bs-target="#signupModal">
+                                <i class="fas fa-rocket me-2"></i>Get Started Free
+                            </button>
+                            <a href="search.html" class="btn btn-outline-primary btn-lg me-3 mb-2">
+                                <i class="fas fa-search me-2"></i>Smart Search
                             </a>
-                            <a href="#about" class="btn btn-outline-primary btn-lg me-3 mb-2" id="aboutBtn">
+                            <a href="#about" class="btn btn-secondary btn-lg mb-2" id="aboutBtn">
                                 <i class="fas fa-info-circle me-2"></i>Learn More
-                            </a>
-                            <a href="#features" class="btn btn-secondary btn-lg mb-2" id="featuresBtn">
-                                <i class="fas fa-star me-2"></i>Features
                             </a>
                         </div>
                     </div>
@@ -120,19 +128,37 @@
                 <div class="col-lg-6">
                     <div class="hero-image text-center">
                         <div class="illustration">
-                            <i class="fas fa-graduation-cap hero-icon"></i>
+                            <!-- Main student networking icon -->
+                            <div class="main-illustration">
+                                <i class="fas fa-user-friends hero-icon"></i>
+                                <div class="student-avatars">
+                                    <div class="avatar avatar-1">👩‍🎓</div>
+                                    <div class="avatar avatar-2">👨‍🎓</div>
+                                    <div class="avatar avatar-3">👩‍💻</div>
+                                    <div class="avatar avatar-4">👨‍🔬</div>
+                                </div>
+                            </div>
+                            
                             <div class="floating-elements">
                                 <div class="floating-card card-1">
-                                    <i class="fas fa-users"></i>
+                                    <i class="fas fa-search"></i>
+                                    <span class="card-label">Smart Search</span>
                                 </div>
                                 <div class="floating-card card-2">
-                                    <i class="fas fa-calendar"></i>
+                                    <i class="fas fa-users"></i>
+                                    <span class="card-label">Discover</span>
                                 </div>
                                 <div class="floating-card card-3">
                                     <i class="fas fa-comments"></i>
+                                    <span class="card-label">Chat</span>
                                 </div>
                                 <div class="floating-card card-4">
-                                    <i class="fas fa-trophy"></i>
+                                    <i class="fas fa-heart"></i>
+                                    <span class="card-label">Connect</span>
+                                </div>
+                                <div class="floating-card card-5">
+                                    <i class="fas fa-handshake"></i>
+                                    <span class="card-label">Collaborate</span>
                                 </div>
                             </div>
                         </div>
@@ -149,31 +175,30 @@
                 <div class="col-lg-8 mx-auto text-center">
                     <h2 class="mb-4">About College Buddy</h2>
                     <p class="lead">
-                        College Buddy is a free college networking and event platform built to help 
-                        students connect, collaborate, and grow together. Whether you're looking for 
-                        study partners, project collaborators, or just want to expand your network, 
-                        we've got you covered!
+                        College Buddy is the premier free networking platform designed exclusively for college students. 
+                        Connect with amazing peers from universities nationwide, share experiences, collaborate on projects, 
+                        and build lasting friendships that will enrich your entire college journey!
                     </p>
                     <div class="row mt-5">
                         <div class="col-md-4 mb-4">
                             <div class="feature-box">
                                 <i class="fas fa-search fa-3x text-primary mb-3"></i>
                                 <h5>Smart Search</h5>
-                                <p>Find students by college, branch, skills, and hobbies</p>
+                                <p>Discover students by college, major, interests, and skills with our intelligent matching system</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="feature-box">
-                                <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
-                                <h5>Event Updates</h5>
-                                <p>Never miss important events, hackathons, and competitions</p>
+                                <i class="fas fa-users fa-3x text-primary mb-3"></i>
+                                <h5>Student Discovery</h5>
+                                <p>Browse and connect with fellow students who share your interests and academic goals</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="feature-box">
-                                <i class="fas fa-brain fa-3x text-primary mb-3"></i>
-                                <h5>Interactive Quizzes</h5>
-                                <p>Test your knowledge with fun quizzes hosted in the app</p>
+                                <i class="fas fa-comments fa-3x text-primary mb-3"></i>
+                                <h5>Real-time Chat</h5>
+                                <p>Start conversations, collaborate on projects, and build meaningful connections instantly</p>
                             </div>
                         </div>
                     </div>
@@ -181,6 +206,163 @@
             </div>
         </div>
     </section>
+
+    <!-- Sign Up Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white border-0">
+                    <h5 class="modal-title" id="signupModalLabel">
+                        <i class="fas fa-graduation-cap me-2"></i>Join College Buddy
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                        <h6 class="text-primary mb-3">Connect with students nationwide 🌟</h6>
+                        <p class="text-muted">Create your account to start networking with amazing college students!</p>
+                    </div>
+                    
+                    <!-- Social Login Buttons -->
+                    <div class="social-auth mb-4">
+                        <button class="btn btn-outline-danger btn-lg w-100 mb-3" id="googleSignup">
+                            <i class="fab fa-google me-2"></i>Continue with Google
+                        </button>
+                        <button class="btn btn-outline-primary btn-lg w-100 mb-3" id="facebookSignup">
+                            <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
+                        </button>
+                        <button class="btn btn-outline-dark btn-lg w-100 mb-3" id="githubSignup">
+                            <i class="fab fa-github me-2"></i>Continue with GitHub
+                        </button>
+                    </div>
+                    
+                    <div class="divider mb-4">
+                        <span class="divider-text">or sign up with email</span>
+                    </div>
+                    
+                    <!-- Sign Up Form -->
+                    <form id="signupForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control form-control-lg" id="firstName" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control form-control-lg" id="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">College Email</label>
+                            <input type="email" class="form-control form-control-lg" id="email" placeholder="your.name@university.edu" required>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="college" class="form-label">College/University</label>
+                                <input type="text" class="form-control form-control-lg" id="college" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="major" class="form-label">Major</label>
+                                <input type="text" class="form-control form-control-lg" id="major" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control form-control-lg" id="password" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                <label class="form-check-label" for="agreeTerms">
+                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                            <i class="fas fa-rocket me-2"></i>Create My Account
+                        </button>
+                    </form>
+                    
+                    <div class="text-center">
+                        <p class="text-muted">
+                            Already have an account? 
+                            <a href="#" class="text-primary fw-bold" id="showLogin">Sign In</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-primary text-white border-0">
+                    <h5 class="modal-title" id="loginModalLabel">
+                        <i class="fas fa-sign-in-alt me-2"></i>Welcome Back!
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="text-center mb-4">
+                        <h6 class="text-primary mb-3">Sign in to your account 👋</h6>
+                    </div>
+                    
+                    <!-- Social Login Buttons -->
+                    <div class="social-auth mb-4">
+                        <button class="btn btn-outline-danger btn-lg w-100 mb-3" id="googleLogin">
+                            <i class="fab fa-google me-2"></i>Continue with Google
+                        </button>
+                        <button class="btn btn-outline-primary btn-lg w-100 mb-3" id="facebookLogin">
+                            <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
+                        </button>
+                    </div>
+                    
+                    <div class="divider mb-4">
+                        <span class="divider-text">or sign in with email</span>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control form-control-lg" id="loginEmail" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="loginPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control form-control-lg" id="loginPassword" required>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                            </div>
+                            <a href="#" class="text-primary">Forgot password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </button>
+                    </form>
+                    
+                    <div class="text-center">
+                        <p class="text-muted">
+                            Don't have an account? 
+                            <a href="#" class="text-primary fw-bold" id="showSignup">Sign Up</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-dark text-light py-4 mt-5">
