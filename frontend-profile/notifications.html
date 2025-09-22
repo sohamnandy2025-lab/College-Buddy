@@ -367,7 +367,7 @@
 
                 <!-- Desktop Navigation -->
                 <ul class="nav-menu d-none d-lg-flex">
-                    <li><a href="#" class="nav-item" onclick="setActive(this, 'search')">
+                    <li><a href="search.html" class="nav-item" onclick="setActive(this, 'search')">
                         <i class="fas fa-search me-1"></i>Search
                     </a></li>
                     <li><a href="discover.html" class="nav-item" onclick="setActive(this, 'discover')">
@@ -391,6 +391,9 @@
                     </button>
                     <button class="profile-btn" onclick="openProfile()" title="Profile">
                         <i class="fas fa-user"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm me-2" onclick="logout()" title="Logout">
+                        <i class="fas fa-sign-out-alt me-1"></i>Logout
                     </button>
                 </div>
             </div>
@@ -694,6 +697,15 @@
 
         function openProfile() {
             window.location.href = 'profile-new.html';
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userInitials');
+                localStorage.removeItem('currentUser');
+                window.location.href = '../frontend-landing/index.html';
+            }
         }
 
         // Theme management

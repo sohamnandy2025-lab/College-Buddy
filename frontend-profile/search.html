@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Search - College Buddy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            --border-radius: 12px;
+            
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border-color: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.4);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Body and General Theming */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 1050;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px var(--shadow-hover);
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: var(--bg-secondary) !important;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .navbar .navbar-brand {
+            color: var(--text-primary) !important;
+            font-weight: 700;
+        }
+
+        /* Compact Navigation Styles */
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            gap: 0.75rem;
+            align-items: center;
+            max-width: 500px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transform: translateY(-1px);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        /* Profile Button */
+        .profile-btn {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .profile-btn:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .profile-btn i {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Search Box */
+        .search-box {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: -3rem;
+            position: relative;
+            z-index: 10;
+            box-shadow: var(--shadow-medium);
+            border: 1px solid var(--border-color);
+        }
+
+        .search-input {
+            border-radius: 25px;
+            border: 2px solid var(--border-color);
+            padding: 15px 20px;
+            font-size: 1.1rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .search-btn {
+            border-radius: 25px;
+            padding: 15px 30px;
+            background: var(--gradient-primary);
+            border: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        /* Search Filters */
+        .search-filters {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .filter-chip {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .filter-chip:hover,
+        .filter-chip.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-1px);
+        }
+
+        /* Search Results */
+        .search-results {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+
+        .result-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .result-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .result-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .skill-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 0.25rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            margin: 0.1rem;
+            display: inline-block;
+        }
+
+        .btn {
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+        }
+
+        /* Text styling */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Dark mode skill tags */
+        [data-theme="dark"] .skill-tag {
+            background: rgba(25, 118, 210, 0.2);
+            color: #64b5f6;
+        }
+
+        /* Recent searches */
+        .recent-searches {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .recent-search-item {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            margin: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .recent-search-item:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        [data-theme="dark"] .recent-search-item:hover {
+            background: var(--border-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <!-- Logo -->
+                <a href="index.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap me-2"></i>College Buddy
+                </a>
+
+                <!-- Desktop Navigation -->
+                <ul class="nav-menu d-none d-lg-flex">
+                    <li><a href="search.html" class="nav-item active" onclick="setActive(this, 'search')">
+                        <i class="fas fa-search me-1"></i>Search
+                    </a></li>
+                    <li><a href="discover.html" class="nav-item" onclick="setActive(this, 'discover')">
+                        <i class="fas fa-compass me-1"></i>Discover
+                    </a></li>
+                    <li><a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
+                        <i class="fas fa-users me-1"></i>Buddies
+                    </a></li>
+                    <li><a href="profile-new.html?tab=leaderboard" class="nav-item" onclick="setActive(this, 'leaderboard')">
+                        <i class="fas fa-trophy me-1"></i>Leaderboard
+                    </a></li>
+                    <li><a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
+                        <i class="fas fa-bell me-1"></i>Notifications
+                    </a></li>
+                </ul>
+
+                <!-- Header Controls -->
+                <div class="header-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="profile-btn" onclick="openProfile()" title="Profile">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm me-2" onclick="logout()" title="Logout">
+                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 mb-3">Smart Search</h1>
+            <p class="lead">Find students by skills, interests, university, or any keyword</p>
+        </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="container">
+        <div class="search-box">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="input-group input-group-lg">
+                        <input type="text" class="form-control search-input" 
+                               placeholder="Search for students by name, skills, college, interests..." 
+                               id="mainSearchInput" onkeyup="handleSearch(event)">
+                        <button class="btn btn-primary search-btn" onclick="performSearch()">
+                            <i class="fas fa-search me-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search Content -->
+    <div class="container my-5">
+        <!-- Search Filters -->
+        <div class="search-filters">
+            <h5 class="mb-3"><i class="fas fa-filter me-2"></i>Quick Filters</h5>
+            <div class="filter-chips">
+                <div class="filter-chip active" onclick="setFilter(this, 'all')">All Results</div>
+                <div class="filter-chip" onclick="setFilter(this, 'skills')">By Skills</div>
+                <div class="filter-chip" onclick="setFilter(this, 'college')">By College</div>
+                <div class="filter-chip" onclick="setFilter(this, 'year')">By Year</div>
+                <div class="filter-chip" onclick="setFilter(this, 'hobbies')">By Hobbies</div>
+            </div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="search-results" id="searchResults">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5><i class="fas fa-search me-2"></i>Search Results</h5>
+                <span class="text-muted" id="resultsCount">Enter a search term to find students</span>
+            </div>
+            
+            <div id="resultsContainer">
+                <!-- Default state -->
+                <div class="text-center py-5" id="defaultState">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>Start Your Search</h4>
+                    <p class="text-muted">Use the search box above to find students by name, skills, college, or interests.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Searches -->
+        <div class="recent-searches" id="recentSearches">
+            <h5 class="mb-3"><i class="fas fa-history me-2"></i>Recent Searches</h5>
+            <div id="recentSearchesContainer">
+                <span class="recent-search-item" onclick="performSearch('JavaScript')">JavaScript</span>
+                <span class="recent-search-item" onclick="performSearch('Python')">Python</span>
+                <span class="recent-search-item" onclick="performSearch('MIT')">MIT</span>
+                <span class="recent-search-item" onclick="performSearch('Data Science')">Data Science</span>
+                <span class="recent-search-item" onclick="performSearch('UI/UX')">UI/UX</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample student data for search
+        const studentsData = [
+            {
+                id: 1,
+                name: "Alex Johnson",
+                college: "MIT",
+                year: "3rd Year",
+                avatar: "A",
+                skills: ["JavaScript", "Python", "React", "Machine Learning"],
+                hobbies: ["Photography", "Gaming", "Music"],
+                bio: "CS student passionate about web development and AI"
+            },
+            {
+                id: 2,
+                name: "Sarah Chen",
+                college: "Stanford University",
+                year: "2nd Year",
+                avatar: "S",
+                skills: ["Java", "C++", "Algorithms", "Data Structures"],
+                hobbies: ["Hiking", "Reading", "Cooking"],
+                bio: "Engineering student who loves problem-solving"
+            },
+            {
+                id: 3,
+                name: "Marcus Williams",
+                college: "Harvard University",
+                year: "4th Year",
+                avatar: "M",
+                skills: ["Data Analysis", "SQL", "Statistics", "R"],
+                hobbies: ["Basketball", "Movies", "Travel"],
+                bio: "Data Science major with passion for analytics"
+            },
+            {
+                id: 4,
+                name: "Emily Rodriguez",
+                college: "UC Berkeley",
+                year: "1st Year",
+                avatar: "E",
+                skills: ["Graphic Design", "UI/UX", "Figma", "Adobe Creative"],
+                hobbies: ["Art", "Dance", "Volleyball"],
+                bio: "Creative design student"
+            },
+            {
+                id: 5,
+                name: "David Kim",
+                college: "Carnegie Mellon",
+                year: "3rd Year",
+                avatar: "D",
+                skills: ["Cybersecurity", "Network Admin", "Ethical Hacking"],
+                hobbies: ["Chess", "Podcasts", "Cycling"],
+                bio: "Security-focused CS student"
+            },
+            {
+                id: 6,
+                name: "Maya Patel",
+                college: "Georgia Tech",
+                year: "2nd Year",
+                avatar: "M",
+                skills: ["Mobile Development", "Swift", "Kotlin", "Flutter"],
+                hobbies: ["Gaming", "Anime", "Yoga"],
+                bio: "Mobile app developer"
+            },
+            {
+                id: 7,
+                name: "James Thompson",
+                college: "University of Washington",
+                year: "4th Year",
+                avatar: "J",
+                skills: ["Backend Development", "Node.js", "Database Design", "APIs"],
+                hobbies: ["Rock Climbing", "Guitar", "Brewing"],
+                bio: "Backend enthusiast"
+            },
+            {
+                id: 8,
+                name: "Priya Singh",
+                college: "University of Texas",
+                year: "1st Year",
+                avatar: "P",
+                skills: ["Content Writing", "Social Media", "Marketing", "Analytics"],
+                hobbies: ["Writing", "Photography", "Tennis"],
+                bio: "Marketing student with creative background"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let recentSearches = JSON.parse(localStorage.getItem('recentSearches') || '[]');
+
+        // Perform search
+        function performSearch(searchTerm = null) {
+            const query = searchTerm || document.getElementById('mainSearchInput').value.toLowerCase().trim();
+            
+            if (!query) {
+                showDefaultState();
+                return;
+            }
+
+            // Add to recent searches
+            addToRecentSearches(query);
+
+            // Filter students based on query and current filter
+            let results = studentsData.filter(student => {
+                const nameMatch = student.name.toLowerCase().includes(query);
+                const collegeMatch = student.college.toLowerCase().includes(query);
+                const skillsMatch = student.skills.some(skill => skill.toLowerCase().includes(query));
+                const hobbiesMatch = student.hobbies.some(hobby => hobby.toLowerCase().includes(query));
+                const bioMatch = student.bio.toLowerCase().includes(query);
+                const yearMatch = student.year.toLowerCase().includes(query);
+
+                const generalMatch = nameMatch || collegeMatch || skillsMatch || hobbiesMatch || bioMatch || yearMatch;
+
+                // Apply current filter
+                if (currentFilter === 'all') return generalMatch;
+                if (currentFilter === 'skills') return skillsMatch;
+                if (currentFilter === 'college') return collegeMatch;
+                if (currentFilter === 'year') return yearMatch;
+                if (currentFilter === 'hobbies') return hobbiesMatch;
+
+                return generalMatch;
+            });
+
+            displaySearchResults(results, query);
+        }
+
+        // Display search results
+        function displaySearchResults(results, query) {
+            const container = document.getElementById('resultsContainer');
+            const countElement = document.getElementById('resultsCount');
+            
+            if (results.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-search-minus fa-3x text-muted mb-3"></i>
+                        <h4>No Results Found</h4>
+                        <p class="text-muted">No students found matching "${query}". Try different keywords or filters.</p>
+                    </div>
+                `;
+                countElement.textContent = 'No results found';
+                return;
+            }
+
+            countElement.textContent = `${results.length} result${results.length !== 1 ? 's' : ''} found for "${query}"`;
+
+            container.innerHTML = results.map(student => `
+                <div class="result-card" onclick="viewProfile(${student.id})">
+                    <div class="d-flex align-items-start">
+                        <div class="result-avatar">
+                            ${student.avatar}
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="mb-0">${student.name}</h6>
+                                <span class="text-muted small">${student.year}</span>
+                            </div>
+                            <p class="text-muted mb-2">${student.college}</p>
+                            <p class="mb-3">${student.bio}</p>
+                            
+                            <div class="mb-2">
+                                <strong class="small">Skills:</strong><br>
+                                ${student.skills.slice(0, 4).map(skill => 
+                                    `<span class="skill-tag">${skill}</span>`
+                                ).join('')}
+                                ${student.skills.length > 4 ? 
+                                   `<span class="skill-tag">+${student.skills.length - 4}</span>` : ''}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <strong class="small">Interests:</strong>
+                                <span class="text-muted"> ${student.hobbies.join(', ')}</span>
+                            </div>
+                            
+                            <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); connectWithUser(${student.id}, '${student.name}')">
+                                <i class="fas fa-user-plus me-1"></i>Connect
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Show default state
+        function showDefaultState() {
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="text-center py-5" id="defaultState">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4>Start Your Search</h4>
+                    <p class="text-muted">Use the search box above to find students by name, skills, college, or interests.</p>
+                </div>
+            `;
+            document.getElementById('resultsCount').textContent = 'Enter a search term to find students';
+        }
+
+        // Handle search input
+        function handleSearch(event) {
+            if (event.key === 'Enter') {
+                performSearch();
+            }
+        }
+
+        // Set search filter
+        function setFilter(element, filter) {
+            // Remove active class from all filters
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            
+            // Add active class to clicked filter
+            element.classList.add('active');
+            currentFilter = filter;
+            
+            // Re-run search if there's a current query
+            const currentQuery = document.getElementById('mainSearchInput').value;
+            if (currentQuery.trim()) {
+                performSearch();
+            }
+        }
+
+        // Add to recent searches
+        function addToRecentSearches(query) {
+            if (!recentSearches.includes(query)) {
+                recentSearches.unshift(query);
+                recentSearches = recentSearches.slice(0, 8); // Keep only 8 recent searches
+                localStorage.setItem('recentSearches', JSON.stringify(recentSearches));
+                updateRecentSearches();
+            }
+        }
+
+        // Update recent searches display
+        function updateRecentSearches() {
+            const container = document.getElementById('recentSearchesContainer');
+            container.innerHTML = recentSearches.map(search => 
+                `<span class="recent-search-item" onclick="performSearch('${search}')">${search}</span>`
+            ).join('');
+        }
+
+        // Connect with user
+        function connectWithUser(studentId, studentName) {
+            alert(`Connection request sent to ${studentName}! 🎉\n\nIn a real app, this would:\n- Send a notification to ${studentName}\n- Add to your pending connections\n- Show connection status`);
+        }
+
+        // View profile
+        function viewProfile(studentId) {
+            window.location.href = `profile-new.html?id=${studentId}`;
+        }
+
+        // Navigation functions
+        function setActive(element, section) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            element.classList.add('active');
+        }
+
+        function openProfile() {
+            window.location.href = 'profile-new.html';
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userInitials');
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('recentSearches');
+                window.location.href = '../frontend-landing/index.html';
+            }
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTheme();
+            updateRecentSearches();
+            
+            // Focus on search input
+            document.getElementById('mainSearchInput').focus();
+        });
+    </script>
+</body>
+</html>

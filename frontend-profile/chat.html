@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - College Buddy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* CSS Variables for Theming */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            --border-radius: 12px;
+            
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border-color: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.4);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Body and General Theming */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+            height: 100vh;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        .navbar {
+            background-color: var(--bg-secondary) !important;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1030;
+        }
+
+        .navbar .navbar-brand {
+            color: var(--text-primary) !important;
+            font-weight: 700;
+        }
+
+        /* Chat Container */
+        .chat-container {
+            height: calc(100vh - 76px);
+            margin-top: 76px;
+            display: flex;
+        }
+
+        .chat-sidebar {
+            width: 300px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+
+        .chat-header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+
+        .chat-input-container {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            padding: 1rem;
+        }
+
+        /* Sidebar Contacts */
+        .contacts-header {
+            padding: 1rem;
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .contacts-search {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .contacts-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-item:hover {
+            background: var(--bg-primary);
+        }
+
+        .contact-item.active {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, var(--bg-secondary) 100%);
+            border-left: 4px solid #667eea;
+        }
+
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+            position: relative;
+        }
+
+        .online-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 10px;
+            height: 10px;
+            background: #28a745;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        /* Messages */
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .message.sent {
+            justify-content: flex-end;
+        }
+
+        .message.received {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .message.sent .message-bubble {
+            background: var(--gradient-primary);
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.received .message-bubble {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        .message.sent .message-time {
+            text-align: right;
+        }
+
+        .message.received .message-time {
+            text-align: left;
+        }
+
+        /* Chat Input */
+        .chat-input-group {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.75rem 1rem;
+            resize: none;
+            min-height: 44px;
+            max-height: 100px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .send-btn {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-btn {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+        }
+
+        .theme-toggle-btn:hover {
+            transform: scale(1.1);
+            border-color: #667eea;
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Text styling */
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        p {
+            color: var(--text-secondary);
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .chat-sidebar {
+                position: fixed;
+                left: -300px;
+                height: 100%;
+                z-index: 1040;
+                transition: left 0.3s ease;
+            }
+
+            .chat-sidebar.open {
+                left: 0;
+            }
+
+            .chat-main {
+                width: 100%;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Welcome state */
+        .welcome-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+        }
+
+        .btn {
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <!-- Logo -->
+                <div class="d-flex align-items-center">
+                    <button class="mobile-toggle me-3" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <a href="index.html" class="navbar-brand">
+                        <i class="fas fa-graduation-cap me-2"></i>College Buddy - Chat
+                    </a>
+                </div>
+
+                <!-- Header Controls -->
+                <div class="header-controls">
+                    <button class="theme-toggle-btn" onclick="toggleTheme()" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="btn btn-outline-primary btn-sm" onclick="goBack()">
+                        <i class="fas fa-arrow-left me-1"></i>Back to Buddies
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm" onclick="logout()">
+                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <!-- Chat Sidebar -->
+        <div class="chat-sidebar" id="chatSidebar">
+            <div class="contacts-header">
+                <h5><i class="fas fa-comments me-2"></i>Your Conversations</h5>
+            </div>
+            
+            <div class="contacts-search">
+                <input type="text" class="form-control" placeholder="Search conversations..." 
+                       onkeyup="searchConversations(this.value)">
+            </div>
+            
+            <div class="contacts-list" id="contactsList">
+                <!-- Contacts will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Chat Main -->
+        <div class="chat-main">
+            <!-- Welcome State (default) -->
+            <div class="welcome-state" id="welcomeState">
+                <i class="fas fa-comments fa-4x mb-4"></i>
+                <h3>Welcome to Chat!</h3>
+                <p>Select a conversation to start chatting with your buddies.</p>
+                <button class="btn btn-primary mt-3" onclick="goBack()">
+                    <i class="fas fa-users me-2"></i>View All Buddies
+                </button>
+            </div>
+
+            <!-- Active Chat (hidden by default) -->
+            <div id="activeChat" style="display: none; height: 100%; flex-direction: column;">
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="contact-avatar me-3" id="activeChatAvatar">A</div>
+                    <div>
+                        <h6 class="mb-0" id="activeChatName">Alex Johnson</h6>
+                        <small class="text-muted" id="activeChatStatus">Online</small>
+                    </div>
+                    <div class="ms-auto">
+                        <button class="btn btn-sm btn-outline-primary me-2">
+                            <i class="fas fa-video"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-phone"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be populated by JavaScript -->
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="chat-input-group">
+                        <textarea class="chat-input" id="messageInput" 
+                                  placeholder="Type a message..." rows="1"
+                                  onkeypress="handleKeyPress(event)" 
+                                  oninput="autoResize(this)"></textarea>
+                        <button class="send-btn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample conversation data
+        const conversations = [
+            {
+                id: 1,
+                name: "Alex Johnson",
+                avatar: "A",
+                lastMessage: "Hey! How's your project going?",
+                lastTime: "2 minutes ago",
+                online: true,
+                messages: [
+                    { id: 1, sender: "received", content: "Hey! How's your project going?", time: "10:30 AM" },
+                    { id: 2, sender: "sent", content: "It's going well! Just working on the frontend now.", time: "10:32 AM" },
+                    { id: 3, sender: "received", content: "That's awesome! Let me know if you need any help with React.", time: "10:33 AM" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Sarah Chen",
+                avatar: "S",
+                lastMessage: "Thanks for the study notes!",
+                lastTime: "1 hour ago",
+                online: true,
+                messages: [
+                    { id: 1, sender: "sent", content: "Here are my notes from yesterday's lecture", time: "9:15 AM" },
+                    { id: 2, sender: "received", content: "Thanks for the study notes!", time: "9:45 AM" },
+                    { id: 3, sender: "received", content: "This really helps with understanding algorithms", time: "9:46 AM" }
+                ]
+            },
+            {
+                id: 3,
+                name: "Marcus Williams",
+                avatar: "M",
+                lastMessage: "See you at the study group!",
+                lastTime: "3 hours ago",
+                online: false,
+                messages: [
+                    { id: 1, sender: "received", content: "Are we still meeting for the study group today?", time: "7:20 AM" },
+                    { id: 2, sender: "sent", content: "Yes! 3 PM at the library", time: "7:25 AM" },
+                    { id: 3, sender: "received", content: "See you at the study group!", time: "7:30 AM" }
+                ]
+            },
+            {
+                id: 4,
+                name: "Emily Rodriguez",
+                avatar: "E",
+                lastMessage: "Love your design portfolio!",
+                lastTime: "1 day ago",
+                online: false,
+                messages: [
+                    { id: 1, sender: "sent", content: "Check out my latest design portfolio", time: "Yesterday 4:20 PM" },
+                    { id: 2, sender: "received", content: "Love your design portfolio!", time: "Yesterday 4:45 PM" },
+                    { id: 3, sender: "received", content: "The UI/UX work is really impressive", time: "Yesterday 4:46 PM" }
+                ]
+            }
+        ];
+
+        let currentChat = null;
+
+        // Initialize chat
+        function initializeChat() {
+            loadConversations();
+            
+            // Check if a specific chat was requested
+            const urlParams = new URLSearchParams(window.location.search);
+            const chatWith = urlParams.get('with');
+            if (chatWith) {
+                const conversation = conversations.find(conv => 
+                    conv.name.toLowerCase().includes(chatWith.toLowerCase()));
+                if (conversation) {
+                    openChat(conversation);
+                }
+            }
+        }
+
+        // Load conversations in sidebar
+        function loadConversations() {
+            const container = document.getElementById('contactsList');
+            container.innerHTML = conversations.map(conv => `
+                <div class="contact-item" onclick="openChat(${JSON.stringify(conv).replace(/"/g, '&quot;')})">
+                    <div class="contact-avatar">
+                        ${conv.avatar}
+                        ${conv.online ? '<div class="online-dot"></div>' : ''}
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <h6 class="mb-0">${conv.name}</h6>
+                            <small class="text-muted">${conv.lastTime}</small>
+                        </div>
+                        <p class="mb-0 text-muted small">${conv.lastMessage}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Open chat conversation
+        function openChat(conversation) {
+            currentChat = conversation;
+            
+            // Hide welcome state and show active chat
+            document.getElementById('welcomeState').style.display = 'none';
+            const activeChat = document.getElementById('activeChat');
+            activeChat.style.display = 'flex';
+            
+            // Update chat header
+            document.getElementById('activeChatAvatar').textContent = conversation.avatar;
+            document.getElementById('activeChatName').textContent = conversation.name;
+            document.getElementById('activeChatStatus').textContent = conversation.online ? 'Online' : 'Offline';
+            
+            // Load messages
+            loadMessages(conversation.messages);
+            
+            // Update active state in sidebar
+            document.querySelectorAll('.contact-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                document.getElementById('chatSidebar').classList.remove('open');
+            }
+        }
+
+        // Load messages in chat
+        function loadMessages(messages) {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = messages.map(msg => `
+                <div class="message ${msg.sender}">
+                    <div class="message-bubble">
+                        <div>${msg.content}</div>
+                        <div class="message-time">${msg.time}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || !currentChat) return;
+            
+            // Add message to current chat
+            const newMessage = {
+                id: Date.now(),
+                sender: 'sent',
+                content: message,
+                time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+            };
+            
+            currentChat.messages.push(newMessage);
+            loadMessages(currentChat.messages);
+            
+            // Clear input
+            input.value = '';
+            autoResize(input);
+            
+            // Simulate reply after 2 seconds
+            setTimeout(() => {
+                const replies = [
+                    "That sounds great!",
+                    "Thanks for sharing that!",
+                    "I agree with you",
+                    "Let me think about it",
+                    "Good point!",
+                    "That's really helpful"
+                ];
+                const reply = {
+                    id: Date.now() + 1,
+                    sender: 'received',
+                    content: replies[Math.floor(Math.random() * replies.length)],
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+                currentChat.messages.push(reply);
+                loadMessages(currentChat.messages);
+            }, 2000);
+        }
+
+        // Handle enter key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Auto resize textarea
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+        }
+
+        // Search conversations
+        function searchConversations(query) {
+            const items = document.querySelectorAll('.contact-item');
+            items.forEach(item => {
+                const name = item.querySelector('h6').textContent.toLowerCase();
+                const message = item.querySelector('.text-muted').textContent.toLowerCase();
+                const match = name.includes(query.toLowerCase()) || message.includes(query.toLowerCase());
+                item.style.display = match ? 'flex' : 'none';
+            });
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('chatSidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Go back to buddies page
+        function goBack() {
+            window.location.href = 'buddies.html';
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('userInitials');
+                localStorage.removeItem('currentUser');
+                window.location.href = '../frontend-landing/index.html';
+            }
+        }
+
+        // Theme management
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTheme();
+            initializeChat();
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                document.getElementById('chatSidebar').classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
