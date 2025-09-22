@@ -365,6 +365,39 @@
     Do NOT commit real secrets to public repositories. Prefer local overrides. -->
     <script id="firebase-config" type="application/json">{}</script>
 
+    <!-- Firebase Config Modal -->
+    <div class="modal fade" id="firebaseConfigModal" tabindex="-1" aria-labelledby="firebaseConfigModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header bg-warning text-dark border-0">
+            <h5 class="modal-title" id="firebaseConfigModalLabel">
+              <i class="fas fa-wrench me-2"></i>Configure Firebase
+            </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4">
+            <p class="mb-3">Paste your Firebase Web App config JSON below (Project settings → General → Your apps (Web)).</p>
+            <pre class="bg-light p-2 rounded small">{
+  "apiKey": "...",
+  "authDomain": "<project>.firebaseapp.com",
+  "projectId": "<project>",
+  "storageBucket": "<project>.appspot.com",
+  "messagingSenderId": "...",
+  "appId": "..."
+}</pre>
+            <textarea id="firebaseConfigTextarea" class="form-control" rows="10" placeholder="{\n  &quot;apiKey&quot;: &quot;...&quot;,\n  &quot;authDomain&quot;: &quot;...&quot;,\n  &quot;projectId&quot;: &quot;...&quot;,\n  &quot;storageBucket&quot;: &quot;...&quot;,\n  &quot;messagingSenderId&quot;: &quot;...&quot;,\n  &quot;appId&quot;: &quot;...&quot;\n}"></textarea>
+            <div class="form-text mt-2">This is stored only in your browser (localStorage) and not committed to Git.</div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button id="saveFirebaseConfigBtn" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>Save & Initialize
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Custom JavaScript -->
     <script src="main.js"></script>
 </body>

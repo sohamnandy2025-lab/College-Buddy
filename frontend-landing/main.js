@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Set up event listeners
     setupEventListeners();
+
+    // Wire config modal actions
+    setupFirebaseConfigModal();
     
     // Initialize animations
     initializeAnimations();
@@ -323,7 +326,12 @@ function setupSocialAuthHandlers() {
     googleButtons.forEach(btn => {
         btn.addEventListener('click', async () => {
             if (!auth) {
-                showNotification('Configure Firebase', 'Please add your Firebase config JSON into index.html (script#firebase-config) and enable Google provider in Firebase Console.', 'warning');
+                // If Firebase not initialized, open config modal for quick setup
+                const modalEl = document.getElementById('firebaseConfigModal');
+                if (modalEl && typeof bootstrap !== 'undefined') {
+                    new bootstrap.Modal(modalEl).show();
+                }
+                showNotification('Configure Firebase', 'Paste your Firebase config JSON (Project settings → General → Your apps) and enable Google provider in Firebase Console.', 'warning');
                 return;
             }
             try {
@@ -338,7 +346,16 @@ function setupSocialAuthHandlers() {
                 if (loginModalEl) bootstrap.Modal.getInstance(loginModalEl)?.hide();
             } catch (e) {
                 console.error('Google sign-in error', e);
-                showNotification('Sign-in failed', e.message || 'Could not sign in with Google.', 'danger');
+                // Common provider misconfig error
+                if (e?.code === 'auth/operation-not-allowed') {
+                    showNotification('Enable Google provider', 'In Firebase Console → Authentication → Sign-in method, enable Google. Also add this domain to Authorized domains.', 'danger');
+                } else if (e?.code === 'auth/popup-blocked') {
+                    showNotification('Popup blocked', 'Allow popups for this site or try again.', 'warning');
+                } else if (e?.code === 'auth/cancelled-popup-request') {
+                    // ignore minor UX case
+                } else {
+                    showNotification('Sign-in failed', e.message || 'Could not sign in with Google.', 'danger');
+                }
             }
         });
     });
@@ -759,9 +776,19 @@ function initializeFirebase() {
                 try { const parsed = JSON.parse(el.textContent.trim() || '{}'); if (Object.keys(parsed).length) cfg = parsed; } catch(_) {}
             }
         }
+        if (!cfg) {
+            // Try localStorage
+            try {
+                const stored = localStorage.getItem('collegeBuddyFirebaseConfig');
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed && parsed.apiKey) cfg = parsed;
+                }
+            } catch (_) {}
+        }
         if (!cfg || !cfg.apiKey) {
-            console.warn('Firebase config missing. Add JSON to <script id="firebase-config"> in index.html.');
-            return; // leave auth/db null; UI will show helpful notifications
+            console.warn('Firebase config missing (inline/localStorage).');
+            return; // leave auth/db null; UI will show helpful notifications & config modal
         }
         if (!fbApp) fbApp = firebase.initializeApp(cfg);
         auth = firebase.auth();
@@ -802,6 +829,38 @@ async function ensureUserProfile(user, extra = {}) {
     } else {
         await ref.set({ updatedAt: now }, { merge: true });
     }
+}
+
+function setupFirebaseConfigModal() {
+    const saveBtn = document.getElementById('saveFirebaseConfigBtn');
+    const textarea = document.getElementById('firebaseConfigTextarea');
+    if (!saveBtn || !textarea) return;
+    saveBtn.addEventListener('click', () => {
+        try {
+            const text = textarea.value.trim();
+            const cfg = JSON.parse(text);
+            const required = ['apiKey', 'authDomain', 'projectId', 'appId'];
+            for (const k of required) {
+                if (!cfg[k]) throw new Error(`Missing ${k}`);
+            }
+            // Save to localStorage so it persists without committing to Git
+            localStorage.setItem('collegeBuddyFirebaseConfig', JSON.stringify(cfg));
+            // Also reflect into inline script tag for immediate use
+            const el = document.getElementById('firebase-config');
+            if (el) el.textContent = JSON.stringify(cfg);
+            // Re-initialize Firebase
+            initializeFirebase();
+            // Close modal
+            const modalEl = document.getElementById('firebaseConfigModal');
+            if (modalEl && typeof bootstrap !== 'undefined') {
+                bootstrap.Modal.getInstance(modalEl)?.hide();
+            }
+            showNotification('Firebase configured', 'Your Firebase config has been saved locally. You can now sign in.', 'success');
+        } catch (e) {
+            console.error('Invalid Firebase config', e);
+            showNotification('Invalid config', e.message || 'Please paste a valid Firebase Web App config JSON.', 'danger');
+        }
+    });
 }
 
 function buildSearchTokens(u) {
