@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover - College Buddy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* College Buddy - Template CSS Variables */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            --border-radius: 12px;
+            
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border-color: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.4);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 1050;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px var(--shadow-hover);
+        }
+
+        /* Body and General Theming */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Modern Wave Background Effect */
+        .wave-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(45deg, 
+                rgba(102, 126, 234, 0.05) 0%, 
+                rgba(118, 75, 162, 0.05) 25%,
+                rgba(102, 126, 234, 0.03) 50%,
+                rgba(118, 75, 162, 0.05) 75%,
+                rgba(102, 126, 234, 0.05) 100%);
+            background-size: 400% 400%;
+            animation: gradientWave 15s ease infinite;
+        }
+
+        .wave-background::before,
+        .wave-background::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, 
+                rgba(102, 126, 234, 0.1) 0%, 
+                transparent 50%);
+            animation: floatWave 20s linear infinite;
+        }
+
+        .wave-background::before {
+            top: -50%;
+            left: -50%;
+            animation-delay: 0s;
+        }
+
+        .wave-background::after {
+            bottom: -50%;
+            right: -50%;
+            animation-delay: -10s;
+            background: radial-gradient(circle, 
+                rgba(118, 75, 162, 0.1) 0%, 
+                transparent 50%);
+        }
+
+        @keyframes gradientWave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatWave {
+            0% { transform: rotate(0deg) translate(-20px, -20px); }
+            33% { transform: rotate(120deg) translate(-20px, -20px); }
+            66% { transform: rotate(240deg) translate(-20px, -20px); }
+            100% { transform: rotate(360deg) translate(-20px, -20px); }
+        }
+
+        .hero-section {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
+        }
+        .search-container {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 15px var(--shadow);
+            margin-top: -2rem;
+            position: relative;
+            z-index: 10;
+            border: 1px solid var(--border-color);
+        }
+        .profile-card {
+            transition: all 0.3s ease;
+            height: 100%;
+            cursor: pointer;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+        }
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin: 0 auto 1rem;
+            box-shadow: var(--shadow-light);
+            transition: all 0.3s ease;
+        }
+
+        .profile-card:hover .profile-avatar {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-glow);
+        }
+        .skill-badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+            font-size: 0.75rem;
+        }
+        .skill-badge.learn {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+            border: 1px solid #ce93d8;
+        }
+        .connect-btn {
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: var(--border-radius);
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+        .connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .filter-chip {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-chip.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            box-shadow: var(--shadow-light);
+        }
+
+        /* General Button Styling */
+        .btn {
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+        }
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+        .filter-title {
+            color: var(--text-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        .filter-options {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .form-check {
+            margin-bottom: 0.5rem;
+        }
+        .form-check-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        .form-check-input:checked {
+            background-color: #667eea;
+            border-color: #667eea;
+        }
+        .filter-actions {
+            border-top: 1px solid #dee2e6;
+            padding-top: 1rem;
+        }
+        .nav-tabs .nav-link {
+            color: #6c757d;
+            border: none;
+            border-bottom: 2px solid transparent;
+        }
+        .nav-tabs .nav-link.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: none;
+        }
+        .nav-tabs .nav-link:hover {
+            color: #667eea;
+            border-bottom-color: rgba(102, 126, 234, 0.3);
+        }
+
+        /* Navbar Theming */
+        .navbar {
+            background-color: var(--bg-secondary) !important;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .navbar .navbar-brand {
+            color: var(--text-primary) !important;
+        }
+
+        .navbar .navbar-nav .nav-link {
+            color: var(--text-secondary) !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .navbar-nav .nav-link:hover,
+        .navbar .navbar-nav .nav-link.active {
+            color: var(--text-primary) !important;
+        }
+
+        /* Text Updates */
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        h3, h4, h5, h6 {
+            color: var(--text-primary);
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            background: var(--bg-primary) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background: var(--bg-primary) !important;
+            border-color: #667eea !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+        }
+
+        .input-group-text {
+            background: var(--bg-primary) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-secondary) !important;
+        }
+
+        /* Compact Navigation Styles */
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            gap: 0.75rem;
+            align-items: center;
+            max-width: 500px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transform: translateY(-1px);
+        }
+
+        /* Social Feed Styles */
+        .feed-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .stat-label {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .create-post-container .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-light);
+        }
+        
+        .user-avatar .profile-pic {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .create-post-btn {
+            text-align: left;
+            border-radius: 25px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+        }
+        
+        .create-post-btn:hover {
+            background: var(--bg-primary);
+            border-color: #667eea;
+        }
+        
+        .quick-actions .btn {
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .feed-filters {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+        }
+        
+        .filter-btn {
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            border: none;
+        }
+        
+        /* Post Card Styles */
+        .post-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .post-card:hover {
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1rem 0.5rem;
+        }
+        
+        .post-avatar {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+        
+        .post-meta h6 {
+            margin: 0;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+        
+        .post-meta small {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .post-content {
+            padding: 0.5rem 1rem;
+        }
+        
+        .post-content p {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .post-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+        }
+        
+        .post-actions {
+            padding: 0.5rem 1rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .action-btn:hover {
+            color: var(--text-primary);
+        }
+        
+        .action-btn.liked {
+            color: #e74c3c;
+        }
+        
+        .action-btn.favorited {
+            color: #f39c12;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar-container .card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+        
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        
+        .suggestion-item:hover {
+            background: var(--bg-primary);
+        }
+        
+        .suggestion-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 0.75rem;
+            font-size: 0.9rem;
+        }
+        
+        .suggestion-info h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+        
+        .suggestion-info small {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .connect-suggestion-btn {
+            background: var(--gradient-primary);
+            border: none;
+            color: white;
+            border-radius: 15px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        .nav-item.active {
+            color: white;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        /* Profile Button */
+        .profile-btn {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .profile-btn:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .profile-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-btn i {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-nav.show {
+            display: block;
+        }
+
+        .mobile-nav .nav-item {
+            display: block;
+            padding: 0.75rem;
+            margin: 0.25rem 0;
+            border-radius: 10px;
+        }
+
+        .mobile-menu {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Wave Background -->
+    <div class="wave-background"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <!-- Logo -->
+                <a href="index-new.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap me-2"></i>College Buddy
+                </a>
+
+                <!-- Desktop Navigation -->
+                <ul class="nav-menu d-none d-lg-flex">
+                    <li><a href="search.html" class="nav-item" onclick="setActive(this, 'search')">
+                        <i class="fas fa-search me-1"></i>Search
+                    </a></li>
+                    <li><a href="discover.html" class="nav-item active" onclick="setActive(this, 'discover')">
+                        <i class="fas fa-compass me-1"></i>Discover
+                    </a></li>
+                    <li><a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
+                        <i class="fas fa-users me-1"></i>Buddies
+                    </a></li>
+                    <li><a href="profile-new.html#leaderboard" class="nav-item" onclick="setActive(this, 'leaderboard'); openLeaderboard()">
+                        <i class="fas fa-trophy me-1"></i>Leaderboard
+                    </a></li>
+                    <li><a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
+                        <i class="fas fa-bell me-1"></i>Notifications
+                    </a></li>
+                </ul>
+
+                <!-- Header Controls -->
+                <div class="header-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="profile-btn" onclick="openProfile()" title="Profile">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-sm me-2" onclick="logout()" title="Logout">
+                        <i class="fas fa-sign-out-alt me-1"></i>Logout
+                    </button>
+                    <button class="mobile-menu d-lg-none" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <a href="search.html" class="nav-item" onclick="setActive(this, 'search')">
+                <i class="fas fa-search me-2"></i>Search
+            </a>
+            <a href="discover.html" class="nav-item active" onclick="setActive(this, 'discover')">
+                <i class="fas fa-compass me-2"></i>Discover
+            </a>
+            <a href="buddies.html" class="nav-item" onclick="setActive(this, 'buddies')">
+                <i class="fas fa-users me-2"></i>Buddies
+            </a>
+            <a href="profile-new.html#leaderboard" class="nav-item" onclick="setActive(this, 'leaderboard'); openLeaderboard()">
+                <i class="fas fa-trophy me-2"></i>Leaderboard
+            </a>
+            <a href="notifications.html" class="nav-item" onclick="setActive(this, 'notifications')">
+                <i class="fas fa-bell me-2"></i>Notifications
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="container text-center">
+            <h1 class="display-4 mb-3">College Buddy Feed</h1>
+            <p class="lead">See what your peers are sharing and connect with amazing students</p>
+            <div class="feed-stats mt-4">
+                <div class="stat-item">
+                    <span class="stat-number">2,847</span>
+                    <span class="stat-label">Posts Today</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1,156</span>
+                    <span class="stat-label">Active Students</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">324</span>
+                    <span class="stat-label">Online Now</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Section -->
+    <div class="container">
+        <div class="create-post-container mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="user-avatar me-3">
+                            <div class="profile-pic">You</div>
+                        </div>
+                        <div class="flex-grow-1">
+                            <button class="btn btn-outline-secondary w-100 create-post-btn" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                                <i class="fas fa-edit me-2"></i>Share something with your peers...
+                            </button>
+                        </div>
+                    </div>
+                    <div class="quick-actions">
+                        <button class="btn btn-sm btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                            <i class="fas fa-image me-1"></i>Photo
+                        </button>
+                        <button class="btn btn-sm btn-outline-success me-2" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                            <i class="fas fa-question-circle me-1"></i>Ask Question
+                        </button>
+                        <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#createPostModal">
+                            <i class="fas fa-lightbulb me-1"></i>Share Tip
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feed Filter Options -->
+        <div class="feed-filters mb-4">
+            <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
+                <button class="btn btn-sm btn-primary filter-btn active" data-filter="all">
+                    <i class="fas fa-globe me-1"></i>All Posts
+                </button>
+                <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="questions">
+                    <i class="fas fa-question-circle me-1"></i>Questions
+                </button>
+                <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="tips">
+                    <i class="fas fa-lightbulb me-1"></i>Tips
+                </button>
+                <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="projects">
+                    <i class="fas fa-code me-1"></i>Projects
+                </button>
+                <button class="btn btn-sm btn-outline-primary filter-btn" data-filter="events">
+                    <i class="fas fa-calendar me-1"></i>Events
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Feed -->
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Feed Posts Container -->
+                <div id="feedContainer">
+                    <!-- Posts will be populated by JavaScript -->
+                </div>
+                
+                <!-- Load More Posts -->
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-primary" onclick="loadMorePosts()">
+                        <i class="fas fa-sync me-2"></i>Load More Posts
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sidebar with suggested connections -->
+            <div class="col-lg-4">
+                <div class="sidebar-container">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-users me-2"></i>Suggested Connections
+                            </h6>
+                        </div>
+                        <div class="card-body p-0" id="suggestedConnections">
+                            <!-- Suggested connections will be populated by JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="fas fa-fire me-2"></i>Trending Topics
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="trending-topics">
+                                <span class="badge bg-primary me-2 mb-2">#JavaScript</span>
+                                <span class="badge bg-primary me-2 mb-2">#MachineLearning</span>
+                                <span class="badge bg-primary me-2 mb-2">#WebDev</span>
+                                <span class="badge bg-primary me-2 mb-2">#DataScience</span>
+                                <span class="badge bg-primary me-2 mb-2">#React</span>
+                                <span class="badge bg-primary me-2 mb-2">#AI</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Social Feed Data
+        let feedPosts = [];
+        let suggestedConnections = [];
+        let currentFilter = 'all';
+        let currentPostIndex = 0;
+        const postsPerLoad = 5;
+
+        // Initialize social feed
+        function initializeFeed() {
+            generateFeedData();
+            generateSuggestedConnections();
+            loadFeedPosts();
+            loadSuggestedConnections();
+            setupFilterButtons();
+        }
+
+        // Create all filter options dynamically
+        function createFilterOptions() {
+            createSkillsFilter();
+            createHobbiesFilter();
+            createCollegeFilter();
+            setupYearFilters();
+        }
+
+        // Create skills filter checkboxes
+        function createSkillsFilter() {
+            const allSkills = new Set();
+            allProfiles.forEach(profile => {
+                profile.skills_teach.forEach(skill => allSkills.add(skill));
+                profile.skills_learn.forEach(skill => allSkills.add(skill));
+            });
+
+            const container = document.getElementById('skillsFilterContainer');
+            container.innerHTML = '';
+            
+            Array.from(allSkills).sort().forEach((skill, index) => {
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'form-check';
+                checkboxDiv.innerHTML = `
+                    <input class="form-check-input skill-filter" type="checkbox" value="${skill}" id="skill${index}">
+                    <label class="form-check-label" for="skill${index}">${skill}</label>
+                `;
+                container.appendChild(checkboxDiv);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.skill-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', updateFilters);
+            });
+        }
+
+        // Create hobbies filter checkboxes
+        function createHobbiesFilter() {
+            const allHobbies = new Set();
+            allProfiles.forEach(profile => {
+                if (profile.hobbies) {
+                    profile.hobbies.forEach(hobby => allHobbies.add(hobby));
+                }
+            });
+
+            const container = document.getElementById('hobbiesFilterContainer');
+            container.innerHTML = '';
+            
+            Array.from(allHobbies).sort().forEach((hobby, index) => {
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'form-check';
+                checkboxDiv.innerHTML = `
+                    <input class="form-check-input hobby-filter" type="checkbox" value="${hobby}" id="hobby${index}">
+                    <label class="form-check-label" for="hobby${index}">${hobby}</label>
+                `;
+                container.appendChild(checkboxDiv);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.hobby-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', updateFilters);
+            });
+        }
+
+        // Create college filter checkboxes
+        function createCollegeFilter() {
+            const allColleges = new Set();
+            allProfiles.forEach(profile => {
+                allColleges.add(profile.college);
+            });
+
+            const container = document.getElementById('collegeFilterContainer');
+            container.innerHTML = '';
+            
+            Array.from(allColleges).sort().forEach((college, index) => {
+                const checkboxDiv = document.createElement('div');
+                checkboxDiv.className = 'form-check';
+                checkboxDiv.innerHTML = `
+                    <input class="form-check-input college-filter" type="checkbox" value="${college}" id="college${index}">
+                    <label class="form-check-label" for="college${index}">${college}</label>
+                `;
+                container.appendChild(checkboxDiv);
+            });
+
+            // Add event listeners
+            document.querySelectorAll('.college-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', updateFilters);
+            });
+        }
+
+        // Setup year filter functionality
+        function setupYearFilters() {
+            // Handle "All Years" checkbox
+            document.getElementById('yearAll').addEventListener('change', function() {
+                if (this.checked) {
+                    document.querySelectorAll('.year-filter').forEach(cb => cb.checked = false);
+                    currentFilters.years = [];
+                    applyFilters();
+                }
+            });
+
+            // Handle individual year checkboxes
+            document.querySelectorAll('.year-filter').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        document.getElementById('yearAll').checked = false;
+                    }
+                    updateFilters();
+                });
+            });
+        }
+
+        // Update filters based on current selections
+        function updateFilters() {
+            // Get selected years
+            currentFilters.years = Array.from(document.querySelectorAll('.year-filter:checked')).map(cb => cb.value);
+            
+            // Get selected skills
+            currentFilters.skills = Array.from(document.querySelectorAll('.skill-filter:checked')).map(cb => cb.value);
+            
+            // Get selected hobbies
+            currentFilters.hobbies = Array.from(document.querySelectorAll('.hobby-filter:checked')).map(cb => cb.value);
+            
+            // Get selected colleges
+            currentFilters.colleges = Array.from(document.querySelectorAll('.college-filter:checked')).map(cb => cb.value);
+
+            applyFilters();
+        }
+
+        // Apply all filters
+        function applyFilters() {
+            filteredProfiles = allProfiles.filter(profile => {
+                // Year filter
+                const matchesYear = currentFilters.years.length === 0 || currentFilters.years.includes(profile.year);
+                
+                // Skills filter
+                const matchesSkill = currentFilters.skills.length === 0 || 
+                    currentFilters.skills.some(skill => 
+                        profile.skills_teach.includes(skill) || profile.skills_learn.includes(skill)
+                    );
+                
+                // Hobbies filter
+                const matchesHobby = currentFilters.hobbies.length === 0 || 
+                    (profile.hobbies && currentFilters.hobbies.some(hobby => profile.hobbies.includes(hobby)));
+                
+                // College filter
+                const matchesCollege = currentFilters.colleges.length === 0 || 
+                    currentFilters.colleges.includes(profile.college);
+
+                return matchesYear && matchesSkill && matchesHobby && matchesCollege;
+            });
+
+            displayProfiles();
+        }
+
+        // Filter profiles based on search input
+        function filterProfiles() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            if (!searchTerm) {
+                applyFilters(); // Apply existing filters if no search term
+                return;
+            }
+
+            filteredProfiles = allProfiles.filter(profile => {
+                const matchesSearch = 
+                    profile.name.toLowerCase().includes(searchTerm) ||
+                    profile.college.toLowerCase().includes(searchTerm) ||
+                    profile.skills_teach.some(skill => skill.toLowerCase().includes(searchTerm)) ||
+                    profile.skills_learn.some(skill => skill.toLowerCase().includes(searchTerm)) ||
+                    (profile.hobbies && profile.hobbies.some(hobby => hobby.toLowerCase().includes(searchTerm))) ||
+                    profile.bio.toLowerCase().includes(searchTerm);
+
+                return matchesSearch;
+            });
+
+            displayProfiles();
+        }
+
+        // Clear all filters
+        function clearAllFilters() {
+            // Reset checkboxes
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('yearAll').checked = true;
+            
+            // Reset filters
+            currentFilters = {
+                years: [],
+                skills: [],
+                hobbies: [],
+                colleges: []
+            };
+            
+            applyFilters();
+        }
+
+        // Clear search
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            applyFilters();
+        }
+
+        // Display filtered profiles
+        function displayProfiles() {
+            const grid = document.getElementById('profilesGrid');
+            const noResults = document.getElementById('noResults');
+            const resultsCount = document.getElementById('resultsCount');
+
+            if (filteredProfiles.length === 0) {
+                grid.innerHTML = '';
+                noResults.classList.remove('d-none');
+                resultsCount.textContent = 'No students found';
+                return;
+            }
+
+            noResults.classList.add('d-none');
+            resultsCount.textContent = `${filteredProfiles.length} student${filteredProfiles.length !== 1 ? 's' : ''} found`;
+
+            grid.innerHTML = filteredProfiles.map(profile => `
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="card profile-card h-100" onclick="viewProfile(${profile.id})">
+                        <div class="card-body text-center">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h5 class="card-title">${profile.name}</h5>
+                            <p class="text-muted mb-2">${profile.college}</p>
+                            <p class="text-muted small mb-3">${profile.year}</p>
+                            
+                            <div class="mb-3">
+                                <h6 class="small fw-bold text-primary">Can Teach:</h6>
+                                <div class="d-flex flex-wrap justify-content-center gap-1 mb-2">
+                                    ${profile.skills_teach.slice(0, 3).map(skill => 
+                                        `<span class="badge skill-badge">${skill}</span>`
+                                    ).join('')}
+                                    ${profile.skills_teach.length > 3 ? 
+                                        `<span class="badge bg-secondary">+${profile.skills_teach.length - 3}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6 class="small fw-bold text-purple">Wants to Learn:</h6>
+                                <div class="d-flex flex-wrap justify-content-center gap-1 mb-2">
+                                    ${profile.skills_learn.slice(0, 3).map(skill => 
+                                        `<span class="badge skill-badge learn">${skill}</span>`
+                                    ).join('')}
+                                    ${profile.skills_learn.length > 3 ? 
+                                        `<span class="badge bg-secondary">+${profile.skills_learn.length - 3}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <h6 class="small fw-bold text-success">Hobbies:</h6>
+                                <div class="d-flex flex-wrap justify-content-center gap-1">
+                                    ${(profile.hobbies || []).slice(0, 2).map(hobby => 
+                                        `<span class="badge bg-light text-dark">${hobby}</span>`
+                                    ).join('')}
+                                    ${(profile.hobbies || []).length > 2 ? 
+                                        `<span class="badge bg-secondary">+${profile.hobbies.length - 2}</span>` : ''}
+                                </div>
+                            </div>
+
+                            <p class="card-text small text-muted">${profile.bio.substring(0, 80)}${profile.bio.length > 80 ? '...' : ''}</p>
+                        </div>
+                        <div class="card-footer bg-transparent text-center">
+                            <button class="btn btn-primary connect-btn" onclick="event.stopPropagation(); connectWithUser(${profile.id}, '${profile.name}')">
+                                <i class="fas fa-user-plus me-1"></i>Connect
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // View individual profile
+        function viewProfile(profileId) {
+            window.location.href = `profile.html?id=${profileId}`;
+        }
+
+        // Connect with user
+        function connectWithUser(profileId, profileName) {
+            alert(`Connection request sent to ${profileName}! 🎉\n\nIn a real app, this would:\n- Send a notification to ${profileName}\n- Add to your pending connections\n- Show connection status`);
+        }
+
+        // Theme Management
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update toggle icon
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Load saved theme
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('show');
+        }
+
+        // Navigation functions
+        function setActive(element, section) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            element.classList.add('active');
+            
+            // Close mobile menu if open
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.remove('show');
+        }
+
+        // Profile button function
+        function openProfile() {
+            window.location.href = 'profile-new.html';
+        }
+
+        // Open leaderboard tab in profile page
+        function openLeaderboard() {
+            window.location.href = 'profile-new.html?tab=leaderboard';
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear any stored user data
+                localStorage.removeItem('userInitials');
+                localStorage.removeItem('currentUser');
+                // Redirect to landing page
+                window.location.href = '../frontend-landing/index.html';
+            }
+        }
+
+        // Make Search feature active
+        function openSearch() {
+            window.location.href = 'search.html';
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTheme();
+            loadProfiles();
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileButton = document.querySelector('.mobile-menu');
+            
+            if (mobileNav && mobileButton && !mobileNav.contains(event.target) && !mobileButton.contains(event.target)) {
+                mobileNav.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

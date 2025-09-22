@@ -33,6 +33,9 @@ function initializePage() {
     // Initialize theme from localStorage
     initializeTheme();
     
+    // Check authentication state and update UI
+    checkAuthenticationState();
+    
     // Load user profile picture
     loadUserProfilePicture();
     
@@ -48,6 +51,54 @@ function initializePage() {
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
+    }
+}
+
+/**
+ * Check if user is authenticated and update UI accordingly
+ */
+function checkAuthenticationState() {
+    const isAuthenticated = localStorage.getItem('userAuthenticated') === 'true';
+    const signupBtn = document.getElementById('signupBtn');
+    const profileBtn = document.querySelector('.profile-pic-btn');
+    
+    if (isAuthenticated) {
+        // User is logged in, show logout button instead of signup
+        if (signupBtn) {
+            signupBtn.innerHTML = '<i class="fas fa-sign-out-alt me-1"></i>Logout';
+            signupBtn.classList.remove('btn-light');
+            signupBtn.classList.add('btn-outline-light');
+            signupBtn.removeAttribute('data-bs-toggle');
+            signupBtn.removeAttribute('data-bs-target');
+            signupBtn.onclick = handleLogout;
+        }
+        
+        // Update profile button to show user initial
+        const userInitials = localStorage.getItem('userInitials') || 'U';
+        if (profileBtn) {
+            const img = profileBtn.querySelector('img');
+            if (img) {
+                img.src = `https://via.placeholder.com/40x40/667eea/ffffff?text=${userInitials}`;
+            }
+        }
+    }
+}
+
+/**
+ * Handle logout
+ */
+function handleLogout() {
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('userAuthenticated');
+        localStorage.removeItem('userInitials');
+        localStorage.removeItem('currentUser');
+        
+        showNotification('Logged Out Successfully! 👋', 'Thanks for using College Buddy. Come back soon!', 'success');
+        
+        // Reload page to reset UI
+        setTimeout(() => {
+            window.location.reload();
+        }, 1500);
     }
 }
 
@@ -283,12 +334,26 @@ function handleEmailSignup(e) {
     const email = document.getElementById('signupEmail').value;
     
     showNotification('Welcome to College Buddy! 🎉', 
-        `Hi ${firstName}! Your account creation is in progress. You'll receive a verification email at ${email}.`, 
+        `Hi ${firstName}! Account created successfully. Redirecting to your dashboard...`, 
         'success');
     
-    // Close modal
+    // Store user authentication state
+    localStorage.setItem('userAuthenticated', 'true');
+    localStorage.setItem('userInitials', firstName.charAt(0).toUpperCase());
+    localStorage.setItem('currentUser', JSON.stringify({
+        name: firstName,
+        email: email,
+        authMethod: 'email'
+    }));
+    
+    // Close modal and redirect
     const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
     if (modal) modal.hide();
+    
+    // Redirect to discover page after a short delay
+    setTimeout(() => {
+        window.location.href = '../frontend-profile/discover.html';
+    }, 1500);
 }
 
 /**
@@ -299,23 +364,56 @@ function handleEmailLogin(e) {
     const email = document.getElementById('loginEmail').value;
     
     showNotification('Welcome Back! 👋', 
-        `Logging you in with ${email}... This is a demo, but you'd be redirected to your dashboard!`, 
+        `Logging you in with ${email}... Redirecting to your dashboard!`, 
         'success');
     
-    // Close modal
+    // Store user authentication state
+    localStorage.setItem('userAuthenticated', 'true');
+    localStorage.setItem('userInitials', 'You');
+    localStorage.setItem('currentUser', JSON.stringify({
+        name: 'Welcome Back',
+        email: email,
+        authMethod: 'email'
+    }));
+    
+    // Close modal and redirect
     const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
     if (modal) modal.hide();
+    
+    // Redirect to discover page after a short delay
+    setTimeout(() => {
+        window.location.href = '../frontend-profile/discover.html';
+    }, 1500);
 }
 
 /**
  * Handle Google authentication
  */
 function handleGoogleAuth(type) {
-    const message = type === 'signup' ? 
-        'Google Sign Up coming soon! This will allow instant account creation with your Google account.' :
-        'Google Sign In coming soon! Quick access with your Google account.';
+    // Simulate successful Google authentication
+    const userName = type === 'signup' ? 'New Student' : 'Welcome Back';
     
-    showNotification('Google Authentication 🔐', message, 'info');
+    showNotification('Google Authentication Success! 🎉', 
+        `${userName}! Redirecting to your dashboard...`, 
+        'success');
+    
+    // Store user authentication state
+    localStorage.setItem('userAuthenticated', 'true');
+    localStorage.setItem('userInitials', 'You');
+    localStorage.setItem('currentUser', JSON.stringify({
+        name: userName,
+        email: 'user@example.com',
+        authMethod: 'google'
+    }));
+    
+    // Close modal and redirect
+    const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+    if (modal) modal.hide();
+    
+    // Redirect to discover page after a short delay
+    setTimeout(() => {
+        window.location.href = '../frontend-profile/discover.html';
+    }, 1500);
 }
 
 /**

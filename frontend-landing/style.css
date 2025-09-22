@@ -36,8 +36,8 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    color: var(--text-primary);
-    background-color: var(--bg-primary);
+    color: var(--text-primary) !important;
+    background-color: var(--bg-primary) !important;
     padding-top: 76px; /* Account for fixed navbar */
     transition: all 0.3s ease;
 }
@@ -603,6 +603,23 @@ p {
 .theme-toggle-btn:hover {
     background: rgba(255, 255, 255, 0.2);
     transform: scale(1.1);
+}
+
+/* Dark mode navbar styling */
+[data-theme="dark"] .navbar {
+    background: rgba(26, 26, 26, 0.95) !important;
+    border-bottom: 1px solid var(--border-color);
+}
+
+[data-theme="dark"] .theme-toggle-btn {
+    background: rgba(45, 45, 45, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .theme-toggle-btn:hover {
+    background: rgba(45, 45, 45, 1);
+}
     color: white;
 }
 
