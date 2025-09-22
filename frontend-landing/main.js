@@ -341,7 +341,19 @@ function setupSocialAuthHandlers() {
                     user = await demoSignInWithGoogle();
                 } else {
                     const provider = new firebase.auth.GoogleAuthProvider();
-                    const result = await auth.signInWithPopup(provider);
+                    // Always show account chooser
+                    provider.setCustomParameters({ prompt: 'select_account' });
+                    let result;
+                    try {
+                        result = await auth.signInWithPopup(provider);
+                    } catch (e) {
+                        if (e?.code === 'auth/popup-blocked' || e?.code === 'auth/popup-closed-by-user') {
+                            // Fallback to redirect flow
+                            await auth.signInWithRedirect(provider);
+                            return; // redirecting
+                        }
+                        throw e;
+                    }
                     user = result.user;
                 }
                 await ensureUserProfile(user, { provider: 'google' });
