@@ -1,0 +1,132 @@
+[
+  {
+    "id": 1,
+    "name": "Priya Sharma",
+    "college": "Delhi University",
+    "year": "3rd Year",
+    "course": "B.Tech Computer Science",
+    "description": "Passionate full-stack developer with a love for creating innovative web solutions and mentoring fellow students.",
+    "profile_picture": "https://via.placeholder.com/150/667eea/white?text=PS",
+    "banner_image": "https://via.placeholder.com/1200x300/764ba2/white?text=Priya+Sharma",
+    "knowledge_toolkit": {
+      "tech_skills": ["JavaScript", "React", "Python", "HTML/CSS", "Git"],
+      "soft_skills": ["Problem Solving", "Team Leadership", "Communication", "Teaching"],
+      "hobbies": ["Photography", "Music Production", "Blog Writing"]
+    },
+    "learning_wishlist": {
+      "tech_skills": ["Machine Learning", "AWS", "Node.js", "Docker"],
+      "soft_skills": ["Public Speaking", "Project Management", "Negotiation"],
+      "hobbies": ["Video Editing", "Digital Art", "Travel Photography"]
+    },
+    "achievements": {
+      "academics": ["Dean's List 2023", "Best Project Award - Web Dev Course", "CGPA: 9.2/10"],
+      "extracurricular": ["Tech Club President", "Organized 3 Hackathons", "Mentored 25+ Students"]
+    },
+    "points": 2450,
+    "bio": "Computer Science student passionate about full-stack development. Love building web applications and exploring new technologies. Always eager to help others learn programming basics!"
+  },
+  {
+    "id": 2,
+    "name": "Arjun Patel",
+    "college": "IIT Bombay",
+    "year": "4th Year",
+    "course": "B.Tech Artificial Intelligence",
+    "description": "AI/ML enthusiast working on cutting-edge research projects and passionate about data-driven solutions.",
+    "profile_picture": "https://via.placeholder.com/150/4285f4/white?text=AP",
+    "banner_image": "https://via.placeholder.com/1200x300/34a853/white?text=Arjun+Patel",
+    "knowledge_toolkit": {
+      "tech_skills": ["Python", "Machine Learning", "Data Analysis", "TensorFlow", "SQL"],
+      "soft_skills": ["Research", "Critical Thinking", "Mentoring", "Technical Writing"],
+      "hobbies": ["Chess", "Competitive Programming", "Science Fiction Reading"]
+    },
+    "learning_wishlist": {
+      "tech_skills": ["Deep Learning", "Computer Vision", "Blockchain", "Flutter"],
+      "soft_skills": ["Leadership", "Presentation Skills", "Time Management"],
+      "hobbies": ["Photography", "Gaming Strategies", "Philosophy"]
+    },
+    "achievements": {
+      "academics": ["Research Paper Published - IEEE", "Google Summer of Code 2023", "CGPA: 9.8/10"],
+      "extracurricular": ["AI Club Co-founder", "Inter-college Quiz Winner", "Open Source Contributor"]
+    },
+    "points": 3200,
+    "bio": "Final year student specializing in AI/ML. Currently working on research projects involving natural language processing. Happy to mentor juniors in data science!"
+  },
+  {
+    "id": 3,
+    "name": "Sneha Reddy",
+    "college": "BITS Pilani",
+    "year": "2nd Year",
+    "course": "B.Des UI/UX Design",
+    "description": "Creative designer passionate about crafting beautiful user experiences and bridging design with technology.",
+    "profile_picture": "https://via.placeholder.com/150/e91e63/white?text=SR",
+    "banner_image": "https://via.placeholder.com/1200x300/9c27b0/white?text=Sneha+Reddy",
+    "knowledge_toolkit": {
+      "tech_skills": ["Figma", "Adobe Creative Suite", "Sketch", "Prototyping", "Wireframing"],
+      "soft_skills": ["Creative Thinking", "User Empathy", "Visual Communication", "Collaboration"],
+      "hobbies": ["Digital Art", "Dancing", "Painting", "Photography"]
+    },
+    "learning_wishlist": {
+      "tech_skills": ["Frontend Development", "CSS Animations", "Three.js", "React"],
+      "soft_skills": ["Client Management", "Design Critique", "Workshop Facilitation"],
+      "hobbies": ["3D Modeling", "Motion Graphics", "Calligraphy"]
+    },
+    "achievements": {
+      "academics": ["Design Excellence Award 2023", "Top 5% in Design Studio", "CGPA: 8.9/10"],
+      "extracurricular": ["Design Club Vice President", "Freelance Projects: 15+", "Design Contest Winner"]
+    },
+    "points": 1850,
+    "bio": "Design enthusiast with a keen eye for aesthetics. Love creating beautiful user interfaces and experiences. Looking to bridge the gap between design and development!"
+  },
+  {
+    "id": 4,
+    "name": "Rahul Kumar",
+    "college": "VIT Vellore",
+    "year": "3rd Year",
+    "course": "B.Tech Software Engineering",
+    "description": "Backend specialist focused on building robust, scalable systems and passionate about clean architecture.",
+    "profile_picture": "https://via.placeholder.com/150/ff9800/white?text=RK",
+    "banner_image": "https://via.placeholder.com/1200x300/ff5722/white?text=Rahul+Kumar",
+    "knowledge_toolkit": {
+      "tech_skills": ["Java", "Spring Boot", "Database Design", "System Design", "REST APIs"],
+      "soft_skills": ["System Architecture", "Problem Solving", "Code Review", "Team Collaboration"],
+      "hobbies": ["Cricket", "Cooking", "Tech Blogging", "Movie Analysis"]
+    },
+    "learning_wishlist": {
+      "tech_skills": ["Microservices", "Docker", "Kubernetes", "DevOps", "Cloud Computing"],
+      "soft_skills": ["Technical Leadership", "Architecture Planning", "Stakeholder Communication"],
+      "hobbies": ["Photography", "Travel Blogging", "Guitar Playing"]
+    },
+    "achievements": {
+      "academics": ["Software Engineering Excellence Award", "Internship at Tech Startup", "CGPA: 8.7/10"],
+      "extracurricular": ["Coding Club Technical Lead", "Hackathon Winner (2x)", "Open Source Projects: 8"]
+    },
+    "points": 2100,
+    "bio": "Backend developer who loves architecting scalable systems. Have experience with enterprise applications and API development. Always up for discussing tech trends!"
+  },
+  {
+    "id": 5,
+    "name": "Ananya Singh",
+    "college": "NIT Trichy",
+    "year": "1st Year",
+    "course": "B.Tech Computer Science",
+    "description": "Creative first-year student bridging technology and digital marketing with fresh perspectives and boundless curiosity.",
+    "profile_picture": "https://via.placeholder.com/150/00bcd4/white?text=AS",
+    "banner_image": "https://via.placeholder.com/1200x300/009688/white?text=Ananya+Singh",
+    "knowledge_toolkit": {
+      "tech_skills": ["Digital Marketing", "Social Media Strategy", "Content Management", "Basic HTML/CSS"],
+      "soft_skills": ["Creative Writing", "Social Media Management", "Brand Building", "Communication"],
+      "hobbies": ["Photography", "Travel Blogging", "Fitness", "Reading"]
+    },
+    "learning_wishlist": {
+      "tech_skills": ["Programming", "Web Development", "App Development", "Data Analysis"],
+      "soft_skills": ["Public Speaking", "Team Leadership", "Project Management"],
+      "hobbies": ["Video Editing", "Graphic Design", "Creative Writing"]
+    },
+    "achievements": {
+      "academics": ["Freshman Academic Excellence", "Best Newcomer Award", "CGPA: 9.1/10"],
+      "extracurricular": ["Social Media Manager - College Fest", "Content Creator (10K+ followers)", "Photography Exhibition"]
+    },
+    "points": 1200,
+    "bio": "First-year student exploring the intersection of technology and creativity. Background in digital marketing, now diving into the world of coding. Excited to learn and grow!"
+  }
+]

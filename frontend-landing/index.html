@@ -28,41 +28,25 @@
             </button>
             
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#home">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="search.html" id="smartSearchBtn">
-                            <i class="fas fa-search me-1"></i>Smart Search
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="discover.html">
-                            <i class="fas fa-users me-1"></i>Discover
-                        </a>
-                    </li>
-                </ul>
+                <!-- Empty space to push right content to the right -->
+                <div class="navbar-nav me-auto"></div>
                 
-                <!-- Dark/Light Mode Toggle -->
-                <div class="theme-toggle me-3">
-                    <button class="btn btn-outline-light btn-sm" id="themeToggle">
+                <!-- Top-right controls -->
+                <div class="navbar-controls d-flex align-items-center">
+                    <!-- Sign Up Button -->
+                    <button class="btn btn-light btn-sm me-3 signup-btn" id="signupBtn" data-bs-toggle="modal" data-bs-target="#authModal">
+                        <i class="fas fa-user-plus me-1"></i>Sign Up
+                    </button>
+                    
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle-btn me-3" id="themeToggle" title="Toggle Theme">
                         <i class="fas fa-moon" id="themeIcon"></i>
                     </button>
-                </div>
-                
-                <!-- Top-right authentication section -->
-                <div class="auth-section d-flex align-items-center">
-                    <div class="auth-description me-3 d-none d-lg-block">
-                        <small class="text-light fw-light">
-                            🌟 Connect with students nationwide • Build your network
-                        </small>
-                    </div>
-                    <div class="auth-buttons">
-                        <button class="btn btn-light btn-lg text-primary fw-bold px-4" id="navSignupBtn" data-bs-toggle="modal" data-bs-target="#signupModal">
-                            <i class="fas fa-user-plus me-2"></i>Join College Buddy
-                        </button>
-                    </div>
+                    
+                    <!-- Profile Picture Button -->
+                    <button class="profile-pic-btn" onclick="window.location.href='../frontend-profile/profile-new.html'" title="Profile">
+                        <img src="https://via.placeholder.com/40x40/667eea/ffffff?text=U" alt="Profile" id="profileImage">
+                    </button>
                 </div>
             </div>
         </div>
@@ -85,9 +69,9 @@
                             </div>
                         </div>
                         <p class="lead mb-4 hero-description">
-                            The ultimate networking platform for college students! Connect with amazing peers from universities nationwide, 
-                            share experiences, collaborate on projects, and build lifelong friendships 
-                            that will enrich your college journey and beyond.
+                            Chat and share experiences, hobbies and interests with peers. 
+                            The ultimate networking platform for college students to connect with amazing peers from universities nationwide 
+                            and build lifelong friendships that will enrich your college journey and beyond.
                         </p>
                         
                         <!-- Feature highlights -->
@@ -102,7 +86,7 @@
                             </div>
                             <div class="feature-item">
                                 <i class="fas fa-comments text-primary me-2"></i>
-                                <span>Chat, collaborate and share experiences with peers</span>
+                                <span>Chat and share experiences with peers</span>
                             </div>
                             <div class="feature-item">
                                 <i class="fas fa-heart text-primary me-2"></i>
@@ -110,17 +94,11 @@
                             </div>
                         </div>
                         
-                        <!-- Action buttons -->
-                        <div class="hero-buttons">
-                            <button class="btn btn-primary btn-lg me-3 mb-2" data-bs-toggle="modal" data-bs-target="#signupModal">
-                                <i class="fas fa-rocket me-2"></i>Get Started Free
+                        <!-- Center Discovery Button -->
+                        <div class="hero-buttons text-center mt-5">
+                            <button class="btn btn-primary btn-lg discover-btn px-5 py-3" onclick="window.location.href='leaderboard.html'">
+                                <i class="fas fa-users me-2"></i>Meet your most active peers
                             </button>
-                            <a href="search.html" class="btn btn-outline-primary btn-lg me-3 mb-2">
-                                <i class="fas fa-search me-2"></i>Smart Search
-                            </a>
-                            <a href="#about" class="btn btn-secondary btn-lg mb-2" id="aboutBtn">
-                                <i class="fas fa-info-circle me-2"></i>Learn More
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -142,11 +120,11 @@
                             <div class="floating-elements">
                                 <div class="floating-card card-1">
                                     <i class="fas fa-search"></i>
-                                    <span class="card-label">Smart Search</span>
+                                    <span class="card-label">Smart Searching</span>
                                 </div>
                                 <div class="floating-card card-2">
                                     <i class="fas fa-users"></i>
-                                    <span class="card-label">Discover</span>
+                                    <span class="card-label">Discover Peers</span>
                                 </div>
                                 <div class="floating-card card-3">
                                     <i class="fas fa-comments"></i>
@@ -156,10 +134,6 @@
                                     <i class="fas fa-heart"></i>
                                     <span class="card-label">Connect</span>
                                 </div>
-                                <div class="floating-card card-5">
-                                    <i class="fas fa-handshake"></i>
-                                    <span class="card-label">Collaborate</span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -168,37 +142,32 @@
         </div>
     </section>
 
-    <!-- About Section (Hidden by default, shown when About button is clicked) -->
-    <section id="about" class="about-section py-5 d-none">
+    <!-- How it Works Section -->
+    <section id="how-it-works" class="how-it-works-section py-5">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 mx-auto text-center">
-                    <h2 class="mb-4">About College Buddy</h2>
-                    <p class="lead">
-                        College Buddy is the premier free networking platform designed exclusively for college students. 
-                        Connect with amazing peers from universities nationwide, share experiences, collaborate on projects, 
-                        and build lasting friendships that will enrich your entire college journey!
-                    </p>
+                <div class="col-lg-10 mx-auto text-center">
+                    <h2 class="mb-5 display-5 fw-bold">How it Works</h2>
                     <div class="row mt-5">
                         <div class="col-md-4 mb-4">
                             <div class="feature-box">
                                 <i class="fas fa-search fa-3x text-primary mb-3"></i>
                                 <h5>Smart Search</h5>
-                                <p>Discover students by college, major, interests, and skills with our intelligent matching system</p>
+                                <p>Quickly find peers by skills, year, hobbies, or university with our intelligent matching system that connects you with the right students.</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="feature-box">
                                 <i class="fas fa-users fa-3x text-primary mb-3"></i>
                                 <h5>Student Discovery</h5>
-                                <p>Browse and connect with fellow students who share your interests and academic goals</p>
+                                <p>Browse and discover students across categories, explore different interests, and find peers who share your academic and personal goals.</p>
                             </div>
                         </div>
                         <div class="col-md-4 mb-4">
                             <div class="feature-box">
                                 <i class="fas fa-comments fa-3x text-primary mb-3"></i>
-                                <h5>Real-time Chat</h5>
-                                <p>Start conversations, collaborate on projects, and build meaningful connections instantly</p>
+                                <h5>Real-time Chatting</h5>
+                                <p>instantly connect and chat with peers, share experiences, and build meaningful relationships that enhance your college journey.</p>
                             </div>
                         </div>
                     </div>
@@ -207,157 +176,162 @@
         </div>
     </section>
 
-    <!-- Sign Up Modal -->
-    <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <!-- Unified Auth Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-primary text-white border-0">
-                    <h5 class="modal-title" id="signupModalLabel">
-                        <i class="fas fa-graduation-cap me-2"></i>Join College Buddy
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="text-center mb-4">
-                        <h6 class="text-primary mb-3">Connect with students nationwide 🌟</h6>
-                        <p class="text-muted">Create your account to start networking with amazing college students!</p>
+            <div class="modal-content border-0 shadow-lg auth-modal">
+                <!-- Sign Up View -->
+                <div id="signupView" class="auth-view">
+                    <div class="modal-header bg-primary text-white border-0">
+                        <h5 class="modal-title">
+                            <i class="fas fa-graduation-cap me-2"></i>Join College Buddy
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    
-                    <!-- Social Login Buttons -->
-                    <div class="social-auth mb-4">
-                        <button class="btn btn-outline-danger btn-lg w-100 mb-3" id="googleSignup">
-                            <i class="fab fa-google me-2"></i>Continue with Google
-                        </button>
-                        <button class="btn btn-outline-primary btn-lg w-100 mb-3" id="facebookSignup">
-                            <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
-                        </button>
-                        <button class="btn btn-outline-dark btn-lg w-100 mb-3" id="githubSignup">
-                            <i class="fab fa-github me-2"></i>Continue with GitHub
-                        </button>
-                    </div>
-                    
-                    <div class="divider mb-4">
-                        <span class="divider-text">or sign up with email</span>
-                    </div>
-                    
-                    <!-- Sign Up Form -->
-                    <form id="signupForm">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="firstName" class="form-label">First Name</label>
-                                <input type="text" class="form-control form-control-lg" id="firstName" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="lastName" class="form-label">Last Name</label>
-                                <input type="text" class="form-control form-control-lg" id="lastName" required>
-                            </div>
+                    <div class="modal-body p-4">
+                        <div class="text-center mb-4">
+                            <h6 class="text-primary mb-3">Connect with students nationwide 🌟</h6>
+                            <p class="text-muted">Create your account to start networking with amazing college students!</p>
                         </div>
                         
-                        <div class="mb-3">
-                            <label for="email" class="form-label">College Email</label>
-                            <input type="email" class="form-control form-control-lg" id="email" placeholder="your.name@university.edu" required>
+                        <!-- Social Auth Buttons -->
+                        <div class="social-auth mb-4">
+                            <button class="btn btn-outline-danger btn-lg w-100 mb-3 social-btn" id="googleSignup">
+                                <i class="fab fa-google me-2"></i>Sign up with Google
+                            </button>
+                            <button class="btn btn-outline-primary btn-lg w-100 mb-3 social-btn" id="emailSignup">
+                                <i class="fas fa-envelope me-2"></i>Sign up with Email
+                            </button>
                         </div>
                         
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="college" class="form-label">College/University</label>
-                                <input type="text" class="form-control form-control-lg" id="college" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="major" class="form-label">Major</label>
-                                <input type="text" class="form-control form-control-lg" id="major" required>
-                            </div>
+                        <div class="text-center">
+                            <p class="text-muted">
+                                Already have an account? 
+                                <a href="#" class="text-primary fw-bold" id="switchToLogin">Sign In</a>
+                            </p>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control form-control-lg" id="password" required>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="agreeTerms" required>
-                                <label class="form-check-label" for="agreeTerms">
-                                    I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
-                            <i class="fas fa-rocket me-2"></i>Create My Account
-                        </button>
-                    </form>
-                    
-                    <div class="text-center">
-                        <p class="text-muted">
-                            Already have an account? 
-                            <a href="#" class="text-primary fw-bold" id="showLogin">Sign In</a>
-                        </p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Login Modal -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-primary text-white border-0">
-                    <h5 class="modal-title" id="loginModalLabel">
-                        <i class="fas fa-sign-in-alt me-2"></i>Welcome Back!
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                
+                <!-- Sign In View -->
+                <div id="signinView" class="auth-view d-none">
+                    <div class="modal-header bg-primary text-white border-0">
+                        <h5 class="modal-title">
+                            <i class="fas fa-sign-in-alt me-2"></i>Welcome Back!
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="text-center mb-4">
+                            <h6 class="text-primary mb-3">Sign in to your account 👋</h6>
+                        </div>
+                        
+                        <!-- Social Auth Buttons -->
+                        <div class="social-auth mb-4">
+                            <button class="btn btn-outline-danger btn-lg w-100 mb-3 social-btn" id="googleLogin">
+                                <i class="fab fa-google me-2"></i>Sign in with Google
+                            </button>
+                            <button class="btn btn-outline-primary btn-lg w-100 mb-3 social-btn" id="emailLogin">
+                                <i class="fas fa-envelope me-2"></i>Sign in with Email
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <p class="text-muted">
+                                Don't have an account? 
+                                <a href="#" class="text-primary fw-bold" id="switchToSignup">Sign Up</a>
+                            </p>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-body p-4">
-                    <div class="text-center mb-4">
-                        <h6 class="text-primary mb-3">Sign in to your account 👋</h6>
+                
+                <!-- Email Form View (for detailed signup/login) -->
+                <div id="emailFormView" class="auth-view d-none">
+                    <div class="modal-header bg-primary text-white border-0">
+                        <h5 class="modal-title" id="emailFormTitle">
+                            <i class="fas fa-envelope me-2"></i>Sign up with Email
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-                    
-                    <!-- Social Login Buttons -->
-                    <div class="social-auth mb-4">
-                        <button class="btn btn-outline-danger btn-lg w-100 mb-3" id="googleLogin">
-                            <i class="fab fa-google me-2"></i>Continue with Google
-                        </button>
-                        <button class="btn btn-outline-primary btn-lg w-100 mb-3" id="facebookLogin">
-                            <i class="fab fa-facebook-f me-2"></i>Continue with Facebook
-                        </button>
-                    </div>
-                    
-                    <div class="divider mb-4">
-                        <span class="divider-text">or sign in with email</span>
-                    </div>
-                    
-                    <!-- Login Form -->
-                    <form id="loginForm">
-                        <div class="mb-3">
-                            <label for="loginEmail" class="form-label">Email</label>
-                            <input type="email" class="form-control form-control-lg" id="loginEmail" required>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="loginPassword" class="form-label">Password</label>
-                            <input type="password" class="form-control form-control-lg" id="loginPassword" required>
-                        </div>
-                        
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="rememberMe">
-                                <label class="form-check-label" for="rememberMe">Remember me</label>
+                    <div class="modal-body p-4">
+                        <!-- Email Signup Form -->
+                        <form id="emailSignupForm" class="email-form">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="firstName" class="form-label">First Name</label>
+                                    <input type="text" class="form-control form-control-lg" id="firstName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="lastName" class="form-label">Last Name</label>
+                                    <input type="text" class="form-control form-control-lg" id="lastName" required>
+                                </div>
                             </div>
-                            <a href="#" class="text-primary">Forgot password?</a>
-                        </div>
+                            
+                            <div class="mb-3">
+                                <label for="signupEmail" class="form-label">College Email</label>
+                                <input type="email" class="form-control form-control-lg" id="signupEmail" placeholder="your.name@university.edu" required>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="college" class="form-label">College/University</label>
+                                    <input type="text" class="form-control form-control-lg" id="college" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="major" class="form-label">Major</label>
+                                    <input type="text" class="form-control form-control-lg" id="major" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="signupPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control form-control-lg" id="signupPassword" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                                    <label class="form-check-label" for="agreeTerms">
+                                        I agree to the <a href="#" class="text-primary">Terms of Service</a> and <a href="#" class="text-primary">Privacy Policy</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                <i class="fas fa-rocket me-2"></i>Create My Account
+                            </button>
+                        </form>
                         
-                        <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
-                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
-                        </button>
-                    </form>
-                    
-                    <div class="text-center">
-                        <p class="text-muted">
-                            Don't have an account? 
-                            <a href="#" class="text-primary fw-bold" id="showSignup">Sign Up</a>
-                        </p>
+                        <!-- Email Login Form -->
+                        <form id="emailLoginForm" class="email-form d-none">
+                            <div class="mb-3">
+                                <label for="loginEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control form-control-lg" id="loginEmail" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="loginPassword" class="form-label">Password</label>
+                                <input type="password" class="form-control form-control-lg" id="loginPassword" required>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                </div>
+                                <a href="#" class="text-primary">Forgot password?</a>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                            </button>
+                        </form>
+                        
+                        <div class="text-center">
+                            <a href="#" class="text-secondary" id="backToOptions">
+                                <i class="fas fa-arrow-left me-1"></i>Back to options
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -367,7 +341,7 @@
     <!-- Footer -->
     <footer class="bg-dark text-light py-4 mt-5">
         <div class="container text-center">
-            <p>&copy; 2025 College Buddy. Built with ❤️ for students, by students.</p>
+            <p>&copy; 2025 College Buddy. Built by those who learn, for those who aspire.</p>
             <div class="social-links mt-3">
                 <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
                 <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>

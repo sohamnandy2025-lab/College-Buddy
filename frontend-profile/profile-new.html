@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - College Buddy</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* College Buddy - Template CSS Variables */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            --border-radius: 12px;
+            
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-muted: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-hover: rgba(0, 0, 0, 0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --text-muted: #888888;
+            --border-color: #404040;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --shadow-hover: rgba(0, 0, 0, 0.4);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Body and General Theming */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 1050;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px var(--shadow-hover);
+        }
+
+        /* Edit Button Styling */
+        .edit-btn {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 0.5rem;
+        }
+
+        .edit-btn:hover {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-color: var(--primary-color);
+        }
+
+        .edit-mode-active {
+            background: var(--primary-color) !important;
+            color: white !important;
+            border-color: var(--primary-color) !important;
+        }
+
+        /* Editable Content */
+        .editable-content {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .editable-content:hover .edit-btn {
+            opacity: 1;
+        }
+
+        .edit-btn {
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Inline Edit Styling */
+        .inline-edit {
+            background: var(--bg-primary);
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            padding: 8px;
+            width: 100%;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .inline-edit:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* General Button Styling */
+        .btn {
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--gradient-primary);
+            border-color: transparent;
+        }
+
+        /* Banner and Profile Picture Styling */
+        .profile-banner {
+            height: 300px;
+            background: var(--gradient-primary);
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .banner-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+        }
+        
+        .profile-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            color: white;
+        }
+        
+        .profile-picture-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+        
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid white;
+            object-fit: cover;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .picture-upload-btn {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            border: 2px solid white;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .picture-upload-btn:hover {
+            background: var(--gradient-primary);
+            transform: scale(1.1);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .banner-upload-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .banner-upload-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Tab Styling */
+        .profile-tabs {
+            margin-top: 2rem;
+        }
+        
+        .nav-tabs {
+            border: none;
+            gap: 0.5rem;
+        }
+        
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            color: #6c757d;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .nav-tabs .nav-link:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+        
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        /* Content Cards */
+        .content-card {
+            background: var(--bg-secondary);
+            border-radius: 15px;
+            box-shadow: 0 2px 10px var(--shadow);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+        
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--shadow-hover);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .section-title i {
+            margin-right: 0.5rem;
+            color: #667eea;
+        }
+        
+        /* Skill and Achievement Tags */
+        .skill-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 3px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .tech-skill {
+            background: #e3f2fd;
+            color: #1976d2;
+            border: 1px solid #bbdefb;
+        }
+        
+        .soft-skill {
+            background: #f3e5f5;
+            color: #7b1fa2;
+            border: 1px solid #ce93d8;
+        }
+        
+        .hobby-skill {
+            background: #e8f5e8;
+            color: #388e3c;
+            border: 1px solid #a5d6a7;
+        }
+        
+        .achievement-item {
+            background: #fff3e0;
+            color: #f57c00;
+            border: 1px solid #ffcc02;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 25px;
+            display: inline-block;
+            font-size: 0.9rem;
+        }
+        
+        /* Points Display */
+        .points-display {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .points-number {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .points-label {
+            font-size: 1.2rem;
+            color: #6c757d;
+            margin-top: 0.5rem;
+        }
+        
+        /* Edit Mode */
+        .edit-mode {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-mode:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        
+        .category-section {
+            margin-bottom: 2rem;
+        }
+        
+        .category-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Body Styling */
+        body {
+            background-color: var(--bg-primary) !important;
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Modern Wave Background Effect */
+        .wave-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+            background: linear-gradient(45deg, 
+                rgba(102, 126, 234, 0.05) 0%, 
+                rgba(118, 75, 162, 0.05) 25%,
+                rgba(102, 126, 234, 0.03) 50%,
+                rgba(118, 75, 162, 0.05) 75%,
+                rgba(102, 126, 234, 0.05) 100%);
+            background-size: 400% 400%;
+            animation: gradientWave 15s ease infinite;
+        }
+
+        .wave-background::before,
+        .wave-background::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, 
+                rgba(102, 126, 234, 0.1) 0%, 
+                transparent 50%);
+            animation: floatWave 20s linear infinite;
+        }
+
+        .wave-background::before {
+            top: -50%;
+            left: -50%;
+            animation-delay: 0s;
+        }
+
+        .wave-background::after {
+            bottom: -50%;
+            right: -50%;
+            animation-delay: -10s;
+            background: radial-gradient(circle, 
+                rgba(118, 75, 162, 0.1) 0%, 
+                transparent 50%);
+        }
+
+        @keyframes gradientWave {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatWave {
+            0% { transform: rotate(0deg) translate(-20px, -20px); }
+            33% { transform: rotate(120deg) translate(-20px, -20px); }
+            66% { transform: rotate(240deg) translate(-20px, -20px); }
+            100% { transform: rotate(360deg) translate(-20px, -20px); }
+        }
+
+        /* Text Color Updates */
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Navbar Theming */
+        .navbar {
+            background-color: var(--bg-secondary) !important;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .navbar .navbar-brand {
+            color: var(--text-primary) !important;
+        }
+
+        .navbar .navbar-nav .nav-link {
+            color: var(--text-secondary) !important;
+            transition: color 0.3s ease;
+        }
+
+        .navbar .navbar-nav .nav-link:hover,
+        .navbar .navbar-nav .nav-link.active {
+            color: var(--text-primary) !important;
+        }
+
+        /* Tab Navigation */
+        .nav-tabs .nav-link {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .nav-tabs .nav-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            border-color: #667eea;
+        }
+
+        /* Modal Theming */
+        .modal-content {
+            background: var(--bg-secondary) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid var(--border-color) !important;
+        }
+
+        .modal-footer {
+            border-top: 1px solid var(--border-color) !important;
+        }
+
+        .form-control {
+            background: var(--bg-primary) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .form-control:focus {
+            background: var(--bg-primary) !important;
+            border-color: #667eea !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+        }
+
+        /* Button Theming */
+        .btn-secondary {
+            background-color: var(--bg-primary) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--border-color) !important;
+            border-color: var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        /* Compact Navigation Styles */
+        .nav-menu {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            gap: 0.75rem;
+            align-items: center;
+            max-width: 500px;
+        }
+
+        .navbar .nav-item {
+            cursor: pointer;
+            padding: 0.4rem 0.8rem;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+            white-space: nowrap;
+        }
+
+        .navbar .nav-item:hover {
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            transform: translateY(-1px);
+        }
+
+        .navbar .nav-item.active {
+            color: white !important;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        /* Profile Button */
+        .profile-btn {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .profile-btn:hover {
+            transform: scale(1.05);
+            border-color: #667eea;
+        }
+
+        .profile-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .profile-btn i {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        /* Header Controls */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            z-index: 999;
+        }
+
+        .mobile-nav.show {
+            display: block;
+        }
+
+        .mobile-nav .nav-item {
+            display: block;
+            padding: 0.75rem;
+            margin: 0.25rem 0;
+            border-radius: 10px;
+        }
+
+        .mobile-menu {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.2rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-banner {
+                height: 200px;
+            }
+            
+            .profile-info {
+                padding: 1rem;
+            }
+            
+            .profile-picture {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .nav-tabs .nav-link {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .points-number {
+                font-size: 3rem;
+            }
+        }
+        
+        /* Hidden file inputs */
+        .hidden-input {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <!-- Modern Wave Background -->
+    <div class="wave-background"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <!-- Logo -->
+                <a href="index-new.html" class="navbar-brand">
+                    <i class="fas fa-graduation-cap me-2"></i>College Buddy
+                </a>
+
+                <!-- Desktop Navigation -->
+                <ul class="nav-menu d-none d-lg-flex">
+                    <li><a href="#" class="nav-item" onclick="setActive(this, 'chat')">
+                        <i class="fas fa-comments me-1"></i>Chat
+                    </a></li>
+                    <li><a href="#" class="nav-item" onclick="setActive(this, 'search')">
+                        <i class="fas fa-search me-1"></i>Search
+                    </a></li>
+                    <li><a href="discover.html" class="nav-item" onclick="setActive(this, 'discover')">
+                        <i class="fas fa-compass me-1"></i>Discover
+                    </a></li>
+                    <li><a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+                        <i class="fas fa-trophy me-1"></i>Board
+                    </a></li>
+                    <li><a href="#" class="nav-item" onclick="setActive(this, 'notifications')">
+                        <i class="fas fa-bell me-1"></i>Alerts
+                    </a></li>
+                    <li><a href="profile-new.html" class="nav-item active" onclick="setActive(this, 'buddies')">
+                        <i class="fas fa-users me-1"></i>Buddies
+                    </a></li>
+                </ul>
+
+                <!-- Header Controls -->
+                <div class="header-controls">
+                    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="profile-btn" onclick="openProfile()" title="Profile">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="mobile-menu d-lg-none" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <a href="#" class="nav-item" onclick="setActive(this, 'chat')">
+                <i class="fas fa-comments me-2"></i>Chat
+            </a>
+            <a href="#" class="nav-item" onclick="setActive(this, 'search')">
+                <i class="fas fa-search me-2"></i>Search
+            </a>
+            <a href="discover.html" class="nav-item" onclick="setActive(this, 'discover')">
+                <i class="fas fa-compass me-2"></i>Discover
+            </a>
+            <a href="#" class="nav-item" onclick="setActive(this, 'leaderboard')">
+                <i class="fas fa-trophy me-2"></i>Board
+            </a>
+            <a href="#" class="nav-item" onclick="setActive(this, 'notifications')">
+                <i class="fas fa-bell me-2"></i>Alerts
+            </a>
+            <a href="profile-new.html" class="nav-item active" onclick="setActive(this, 'buddies')">
+                <i class="fas fa-users me-2"></i>Buddies
+            </a>
+        </div>
+    </nav>
+
+    <!-- Theme Toggle Button -->
+    <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Profile Banner -->
+    <div class="profile-banner" id="profileBanner">
+        <img src="" alt="Banner" class="banner-image d-none" id="bannerImage">
+        <div class="banner-overlay"></div>
+        <button class="banner-upload-btn" onclick="uploadBanner()">
+            <i class="fas fa-camera me-2"></i>Change Banner
+        </button>
+        
+        <div class="profile-info">
+            <div class="profile-picture-container">
+                <img src="https://via.placeholder.com/120/667eea/white?text=U" alt="Profile Picture" 
+                     class="profile-picture" id="profilePicture">
+                <button class="picture-upload-btn" onclick="uploadProfilePicture()">
+                    <i class="fas fa-camera"></i>
+                </button>
+            </div>
+            
+            <h1 class="mb-2" id="profileName">Loading...</h1>
+            <p class="mb-1 fs-5" id="profileCourse">Course</p>
+            <p class="mb-1" id="profileCollege">College</p>
+            <p class="mb-0" id="profileYear">Year</p>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="container profile-tabs">
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="overview-tab" data-bs-toggle="tab" 
+                        data-bs-target="#overview" type="button" role="tab">
+                    <i class="fas fa-user me-2"></i>Overview
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="knowledge-tab" data-bs-toggle="tab" 
+                        data-bs-target="#knowledge" type="button" role="tab">
+                    <i class="fas fa-brain me-2"></i>My Knowledge Toolkit
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="wishlist-tab" data-bs-toggle="tab" 
+                        data-bs-target="#wishlist" type="button" role="tab">
+                    <i class="fas fa-star me-2"></i>My Learning Wishlist
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="achievements-tab" data-bs-toggle="tab" 
+                        data-bs-target="#achievements" type="button" role="tab">
+                    <i class="fas fa-trophy me-2"></i>My Achievements
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="points-tab" data-bs-toggle="tab" 
+                        data-bs-target="#points" type="button" role="tab">
+                    <i class="fas fa-coins me-2"></i>Current Points
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content mt-4" id="profileTabContent">
+            <!-- Overview Tab -->
+            <div class="tab-pane fade show active" id="overview" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="content-card">
+                            <h5 class="section-title">
+                                <span><i class="fas fa-info-circle me-2"></i>About Me</span>
+                                <button class="edit-btn" onclick="editDescription()"><i class="fas fa-edit me-1"></i>Edit</button>
+                            </h5>
+                            <div class="editable-content">
+                                <p id="profileDescription" class="mb-3">Loading description...</p>
+                            </div>
+                            <div class="editable-content">
+                                <p id="profileBio" class="text-muted">Loading bio...</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="content-card text-center">
+                            <h5 class="section-title">
+                                <i class="fas fa-handshake"></i>Connect
+                            </h5>
+                            <button class="btn btn-primary btn-lg w-100" onclick="requestToConnect()">
+                                <i class="fas fa-user-plus me-2"></i>Request to Connect
+                            </button>
+                        </div>
+                        
+                        <div class="content-card">
+                            <h5 class="section-title">
+                                <i class="fas fa-chart-line"></i>Quick Stats
+                            </h5>
+                            <div class="row text-center">
+                                <div class="col-6">
+                                    <div class="fw-bold fs-4 text-primary" id="totalSkills">0</div>
+                                    <div class="small text-muted">Total Skills</div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="fw-bold fs-4 text-success" id="currentPoints">0</div>
+                                    <div class="small text-muted">Points</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Knowledge Toolkit Tab -->
+            <div class="tab-pane fade" id="knowledge" role="tabpanel">
+                <div class="content-card">
+                    <h5 class="section-title">
+                        <span><i class="fas fa-brain me-2"></i>My Knowledge Toolkit</span>
+                        <button class="edit-btn" onclick="editKnowledgeToolkit()"><i class="fas fa-edit me-1"></i>Edit</button>
+                    </h5>
+                    <p class="text-muted mb-4">Skills and expertise I can share with others</p>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-code me-2 text-primary"></i>Tech Skills</span>
+                            <button class="edit-btn" onclick="editSkills('knowledge', 'tech')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="knowledgeTechSkills">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-users me-2 text-purple"></i>Soft Skills</span>
+                            <button class="edit-btn" onclick="editSkills('knowledge', 'soft')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="knowledgeSoftSkills">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-heart me-2 text-success"></i>Hobbies & Interests</span>
+                            <button class="edit-btn" onclick="editSkills('knowledge', 'hobbies')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="knowledgeHobbies">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Wishlist Tab -->
+            <div class="tab-pane fade" id="wishlist" role="tabpanel">
+                <div class="content-card">
+                    <h5 class="section-title">
+                        <span><i class="fas fa-star me-2"></i>My Learning Wishlist</span>
+                        <button class="edit-btn" onclick="editLearningWishlist()"><i class="fas fa-edit me-1"></i>Edit</button>
+                    </h5>
+                    <p class="text-muted mb-4">Skills and areas I'm eager to learn and improve</p>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-laptop-code me-2 text-primary"></i>Tech Skills</span>
+                            <button class="edit-btn" onclick="editSkills('wishlist', 'tech')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="wishlistTechSkills">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-handshake me-2 text-purple"></i>Soft Skills</span>
+                            <button class="edit-btn" onclick="editSkills('wishlist', 'soft')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="wishlistSoftSkills">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-puzzle-piece me-2 text-success"></i>Hobbies & Interests</span>
+                            <button class="edit-btn" onclick="editSkills('wishlist', 'hobbies')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="wishlistHobbies">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievements Tab -->
+            <div class="tab-pane fade" id="achievements" role="tabpanel">
+                <div class="content-card">
+                    <h5 class="section-title">
+                        <span><i class="fas fa-trophy me-2"></i>My Personal Achievements</span>
+                        <button class="edit-btn" onclick="editAchievements()"><i class="fas fa-edit me-1"></i>Edit</button>
+                    </h5>
+                    <p class="text-muted mb-4">Milestones and accomplishments I'm proud of</p>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-graduation-cap me-2 text-primary"></i>Academic Achievements</span>
+                            <button class="edit-btn" onclick="editAchievementCategory('academics')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="academicAchievements">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                    
+                    <div class="category-section">
+                        <h6 class="category-title">
+                            <span><i class="fas fa-users me-2 text-success"></i>Extra-curricular Achievements</span>
+                            <button class="edit-btn" onclick="editAchievementCategory('extracurricular')"><i class="fas fa-plus"></i></button>
+                        </h6>
+                        <div id="extracurricularAchievements">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Points Tab -->
+            <div class="tab-pane fade" id="points" role="tabpanel">
+                <div class="content-card">
+                    <div class="points-display">
+                        <div class="points-number" id="pointsDisplay">0</div>
+                        <div class="points-label">Current Points</div>
+                        <p class="text-muted mt-3">Points earned through connecting, learning, and contributing to the community</p>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="fw-bold fs-3 text-info">+50</div>
+                            <div class="text-muted">Per Connection</div>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="fw-bold fs-3 text-success">+100</div>
+                            <div class="text-muted">Skill Shared</div>
+                        </div>
+                        <div class="col-md-4 text-center mb-3">
+                            <div class="fw-bold fs-3 text-warning">+25</div>
+                            <div class="text-muted">Profile Complete</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="background: var(--bg-secondary); border: 1px solid var(--border-color);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+                    <h5 class="modal-title" id="editModalTitle" style="color: var(--text-primary);">Edit Section</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" onclick="closeEditModal()" style="filter: var(--text-primary) == '#ffffff' ? 'invert(1)' : 'none';"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="editModalContent">
+                        <!-- Dynamic content will be inserted here -->
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--border-color);">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="closeEditModal()">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEdit()">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="profilePictureInput" class="hidden-input" accept="image/*" onchange="handleProfilePictureUpload(event)">
+    <input type="file" id="bannerImageInput" class="hidden-input" accept="image/*" onchange="handleBannerUpload(event)">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentProfile = {};
+        let editModalBootstrap;
+        let currentEditData = {};
+
+        // Theme Management
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update toggle icon
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Load saved theme
+        function loadSavedTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            
+            const toggleIcon = document.querySelector('#themeToggle i');
+            toggleIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        // Load profile data
+        async function loadProfile() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const profileId = urlParams.get('id') || 1;
+                
+                const response = await fetch('profiles.json');
+                const profiles = await response.json();
+                const profile = profiles.find(p => p.id == profileId);
+                
+                if (profile) {
+                    currentProfile = profile;
+                    updateProfileDisplay();
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                // Use default profile data if fetch fails
+                loadDefaultProfile();
+            }
+        }
+
+        // Load default profile data
+        function loadDefaultProfile() {
+            currentProfile = {
+                id: 1,
+                name: "Sample User",
+                college: "Your College",
+                year: "3rd Year",
+                course: "B.Tech Computer Science",
+                description: "Student passionate about learning and connecting with others.",
+                profile_picture: "https://via.placeholder.com/150/667eea/white?text=SU",
+                banner_image: "",
+                knowledge_toolkit: {
+                    tech_skills: ["JavaScript", "Python", "HTML/CSS"],
+                    soft_skills: ["Communication", "Problem Solving"],
+                    hobbies: ["Reading", "Music"]
+                },
+                learning_wishlist: {
+                    tech_skills: ["Machine Learning", "React"],
+                    soft_skills: ["Leadership", "Public Speaking"],
+                    hobbies: ["Photography", "Writing"]
+                },
+                achievements: {
+                    academics: ["Good Academic Standing"],
+                    extracurricular: ["Active Club Member"]
+                },
+                points: 500,
+                bio: "Enthusiastic student ready to learn and grow!"
+            };
+            updateProfileDisplay();
+        }
+
+        // Update profile display
+        function updateProfileDisplay() {
+            // Basic Info
+            document.getElementById('profileName').textContent = currentProfile.name;
+            document.getElementById('profileCourse').textContent = currentProfile.course;
+            document.getElementById('profileCollege').textContent = currentProfile.college;
+            document.getElementById('profileYear').textContent = currentProfile.year;
+            document.getElementById('profileDescription').textContent = currentProfile.description;
+            document.getElementById('profileBio').textContent = currentProfile.bio;
+
+            // Profile Picture
+            if (currentProfile.profile_picture) {
+                document.getElementById('profilePicture').src = currentProfile.profile_picture;
+            }
+
+            // Banner Image
+            if (currentProfile.banner_image) {
+                const bannerImg = document.getElementById('bannerImage');
+                bannerImg.src = currentProfile.banner_image;
+                bannerImg.classList.remove('d-none');
+            }
+
+            // Points
+            document.getElementById('pointsDisplay').textContent = currentProfile.points || 0;
+            document.getElementById('currentPoints').textContent = currentProfile.points || 0;
+
+            // Knowledge Toolkit
+            populateSkills('knowledgeTechSkills', currentProfile.knowledge_toolkit?.tech_skills || [], 'tech-skill');
+            populateSkills('knowledgeSoftSkills', currentProfile.knowledge_toolkit?.soft_skills || [], 'soft-skill');
+            populateSkills('knowledgeHobbies', currentProfile.knowledge_toolkit?.hobbies || [], 'hobby-skill');
+
+            // Learning Wishlist
+            populateSkills('wishlistTechSkills', currentProfile.learning_wishlist?.tech_skills || [], 'tech-skill');
+            populateSkills('wishlistSoftSkills', currentProfile.learning_wishlist?.soft_skills || [], 'soft-skill');
+            populateSkills('wishlistHobbies', currentProfile.learning_wishlist?.hobbies || [], 'hobby-skill');
+
+            // Achievements
+            populateAchievements('academicAchievements', currentProfile.achievements?.academics || []);
+            populateAchievements('extracurricularAchievements', currentProfile.achievements?.extracurricular || []);
+
+            // Calculate total skills
+            const totalSkills = (currentProfile.knowledge_toolkit?.tech_skills?.length || 0) +
+                              (currentProfile.knowledge_toolkit?.soft_skills?.length || 0) +
+                              (currentProfile.knowledge_toolkit?.hobbies?.length || 0);
+            document.getElementById('totalSkills').textContent = totalSkills;
+        }
+
+        // Populate skills
+        function populateSkills(containerId, skills, className) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (skills.length === 0) {
+                container.innerHTML = '<p class="text-muted">No items added yet</p>';
+                return;
+            }
+
+            skills.forEach((skill, index) => {
+                const skillWrapper = document.createElement('span');
+                skillWrapper.style.position = 'relative';
+                skillWrapper.style.display = 'inline-block';
+                skillWrapper.style.margin = '3px';
+                
+                const skillTag = document.createElement('span');
+                skillTag.className = `skill-tag ${className}`;
+                skillTag.textContent = skill;
+                skillTag.style.paddingRight = '25px'; // Make room for remove button
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.className = 'btn btn-sm';
+                removeBtn.style.cssText = `
+                    position: absolute;
+                    right: 5px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: transparent;
+                    border: none;
+                    color: inherit;
+                    font-size: 14px;
+                    line-height: 1;
+                    padding: 0;
+                    width: 16px;
+                    height: 16px;
+                    opacity: 0.7;
+                    cursor: pointer;
+                `;
+                removeBtn.title = 'Remove skill';
+                removeBtn.onclick = () => removeSkill(containerId, index);
+                
+                skillWrapper.appendChild(skillTag);
+                skillWrapper.appendChild(removeBtn);
+                container.appendChild(skillWrapper);
+            });
+        }
+
+        // Remove individual skill
+        function removeSkill(containerId, index) {
+            // Determine which array to modify based on container ID
+            let targetArray;
+            let sectionName, categoryKey;
+            
+            if (containerId.startsWith('knowledge')) {
+                sectionName = 'knowledge_toolkit';
+                if (containerId.includes('Tech')) categoryKey = 'tech_skills';
+                else if (containerId.includes('Soft')) categoryKey = 'soft_skills';
+                else if (containerId.includes('Hobbies')) categoryKey = 'hobbies';
+            } else if (containerId.startsWith('wishlist')) {
+                sectionName = 'learning_wishlist';
+                if (containerId.includes('Tech')) categoryKey = 'tech_skills';
+                else if (containerId.includes('Soft')) categoryKey = 'soft_skills';
+                else if (containerId.includes('Hobbies')) categoryKey = 'hobbies';
+            }
+            
+            if (sectionName && categoryKey) {
+                targetArray = currentProfile[sectionName][categoryKey];
+                if (targetArray && targetArray.length > index) {
+                    targetArray.splice(index, 1);
+                    updateProfileDisplay();
+                }
+            }
+        }
+
+        // Populate achievements
+        function populateAchievements(containerId, achievements) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            if (achievements.length === 0) {
+                container.innerHTML = '<p class="text-muted">No achievements added yet</p>';
+                return;
+            }
+
+            achievements.forEach((achievement, index) => {
+                const achievementWrapper = document.createElement('span');
+                achievementWrapper.style.position = 'relative';
+                achievementWrapper.style.display = 'inline-block';
+                achievementWrapper.style.margin = '5px';
+                
+                const achievementTag = document.createElement('span');
+                achievementTag.className = 'achievement-item';
+                achievementTag.textContent = achievement;
+                achievementTag.style.paddingRight = '25px';
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.className = 'btn btn-sm';
+                removeBtn.style.cssText = `
+                    position: absolute;
+                    right: 8px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    background: transparent;
+                    border: none;
+                    color: inherit;
+                    font-size: 14px;
+                    line-height: 1;
+                    padding: 0;
+                    width: 16px;
+                    height: 16px;
+                    opacity: 0.7;
+                    cursor: pointer;
+                `;
+                removeBtn.title = 'Remove achievement';
+                removeBtn.onclick = () => removeAchievement(containerId, index);
+                
+                achievementWrapper.appendChild(achievementTag);
+                achievementWrapper.appendChild(removeBtn);
+                container.appendChild(achievementWrapper);
+            });
+        }
+
+        // Remove individual achievement
+        function removeAchievement(containerId, index) {
+            let category;
+            if (containerId === 'academicAchievements') category = 'academics';
+            else if (containerId === 'extracurricularAchievements') category = 'extracurricular';
+            
+            if (category && currentProfile.achievements && currentProfile.achievements[category]) {
+                currentProfile.achievements[category].splice(index, 1);
+                updateProfileDisplay();
+            }
+        }
+
+        // Image Upload Functions
+        function uploadProfilePicture() {
+            document.getElementById('profilePictureInput').click();
+        }
+
+        function uploadBanner() {
+            document.getElementById('bannerImageInput').click();
+        }
+
+        function handleProfilePictureUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('profilePicture').src = e.target.result;
+                    // In a real app, you would upload this to your server
+                    console.log('Profile picture updated');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function handleBannerUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const bannerImg = document.getElementById('bannerImage');
+                    bannerImg.src = e.target.result;
+                    bannerImg.classList.remove('d-none');
+                    // In a real app, you would upload this to your server
+                    console.log('Banner image updated');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Connect function
+        function requestToConnect() {
+            alert(`Connection request sent to ${currentProfile.name}! 🎉\n\nIn a real app, this would:\n- Send a notification to the user\n- Add to pending connections\n- Update your network status`);
+        }
+
+        // Edit Functions
+        function editDescription() {
+            currentEditData = {
+                type: 'description',
+                title: 'Edit About Me',
+                fields: [
+                    { label: 'Description', key: 'description', value: currentProfile.description, type: 'textarea' },
+                    { label: 'Bio', key: 'bio', value: currentProfile.bio, type: 'textarea' }
+                ]
+            };
+            showEditModal();
+        }
+
+        function editSkills(section, category) {
+            const sectionName = section === 'knowledge' ? 'knowledge_toolkit' : 'learning_wishlist';
+            const skillsArray = currentProfile[sectionName]?.[category === 'soft' ? 'soft_skills' : category === 'tech' ? 'tech_skills' : 'hobbies'] || [];
+            
+            currentEditData = {
+                type: 'skills',
+                section: sectionName,
+                category: category,
+                title: `Edit ${section === 'knowledge' ? 'Knowledge Toolkit' : 'Learning Wishlist'} - ${category.charAt(0).toUpperCase() + category.slice(1)} Skills`,
+                skills: [...skillsArray]
+            };
+            showEditModal();
+        }
+
+        function editAchievementCategory(category) {
+            const achievements = currentProfile.achievements?.[category] || [];
+            
+            currentEditData = {
+                type: 'achievements',
+                category: category,
+                title: `Edit ${category.charAt(0).toUpperCase() + category.slice(1)} Achievements`,
+                achievements: [...achievements]
+            };
+            showEditModal();
+        }
+
+        function showEditModal() {
+            const modal = document.getElementById('editModal');
+            const title = document.getElementById('editModalTitle');
+            const content = document.getElementById('editModalContent');
+            
+            title.textContent = currentEditData.title;
+            
+            if (currentEditData.type === 'description') {
+                content.innerHTML = currentEditData.fields.map(field => `
+                    <div class="mb-3">
+                        <label class="form-label" style="color: var(--text-primary);">${field.label}</label>
+                        ${field.type === 'textarea' ? 
+                            `<textarea class="form-control inline-edit" rows="3" data-key="${field.key}">${field.value}</textarea>` :
+                            `<input type="text" class="form-control inline-edit" data-key="${field.key}" value="${field.value}">`
+                        }
+                    </div>
+                `).join('');
+            } else if (currentEditData.type === 'skills') {
+                content.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label" style="color: var(--text-primary);">Skills (one per line)</label>
+                        <textarea class="form-control inline-edit" rows="6" id="skillsTextarea">${currentEditData.skills.join('\n')}</textarea>
+                    </div>
+                    <small class="text-muted">Enter each skill on a new line</small>
+                `;
+            } else if (currentEditData.type === 'achievements') {
+                content.innerHTML = `
+                    <div class="mb-3">
+                        <label class="form-label" style="color: var(--text-primary);">Achievements (one per line)</label>
+                        <textarea class="form-control inline-edit" rows="6" id="achievementsTextarea">${currentEditData.achievements.join('\n')}</textarea>
+                    </div>
+                    <small class="text-muted">Enter each achievement on a new line</small>
+                `;
+            }
+            
+            editModalBootstrap = new bootstrap.Modal(modal);
+            editModalBootstrap.show();
+        }
+
+        function saveEdit() {
+            if (currentEditData.type === 'description') {
+                const fields = document.querySelectorAll('.inline-edit');
+                fields.forEach(field => {
+                    const key = field.getAttribute('data-key');
+                    currentProfile[key] = field.value;
+                });
+                updateProfileDisplay();
+            } else if (currentEditData.type === 'skills') {
+                const textarea = document.getElementById('skillsTextarea');
+                const skills = textarea.value.split('\n').filter(skill => skill.trim() !== '').map(skill => skill.trim());
+                
+                const categoryKey = currentEditData.category === 'soft' ? 'soft_skills' : currentEditData.category === 'tech' ? 'tech_skills' : 'hobbies';
+                if (!currentProfile[currentEditData.section]) {
+                    currentProfile[currentEditData.section] = {};
+                }
+                currentProfile[currentEditData.section][categoryKey] = skills;
+                updateProfileDisplay();
+            } else if (currentEditData.type === 'achievements') {
+                const textarea = document.getElementById('achievementsTextarea');
+                const achievements = textarea.value.split('\n').filter(ach => ach.trim() !== '').map(ach => ach.trim());
+                
+                if (!currentProfile.achievements) {
+                    currentProfile.achievements = {};
+                }
+                currentProfile.achievements[currentEditData.category] = achievements;
+                updateProfileDisplay();
+            }
+            
+            // Show success message
+            const btn = document.querySelector('.modal-footer .btn-primary');
+            const originalText = btn.textContent;
+            btn.textContent = 'Saved!';
+            btn.classList.add('btn-success');
+            btn.classList.remove('btn-primary');
+            
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-primary');
+                editModalBootstrap.hide();
+            }, 1000);
+        }
+
+        function closeEditModal() {
+            if (editModalBootstrap) {
+                editModalBootstrap.hide();
+            }
+        }
+
+        // Shortcut edit functions
+        function editKnowledgeToolkit() {
+            alert('💡 Tip: Use the + buttons next to each category to add individual skills!');
+        }
+
+        function editLearningWishlist() {
+            alert('💡 Tip: Use the + buttons next to each category to add individual skills!');
+        }
+
+        function editAchievements() {
+            alert('💡 Tip: Use the + buttons next to each category to add individual achievements!');
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('show');
+        }
+
+        // Navigation functions
+        function setActive(element, section) {
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked item
+            element.classList.add('active');
+            
+            // Close mobile menu if open
+            const mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.remove('show');
+        }
+
+        // Profile button function (already on profile page, so just reload)
+        function openProfile() {
+            window.location.reload();
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSavedTheme();
+            loadProfile();
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileButton = document.querySelector('.mobile-menu');
+            
+            if (mobileNav && mobileButton && !mobileNav.contains(event.target) && !mobileButton.contains(event.target)) {
+                mobileNav.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

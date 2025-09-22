@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard - College Buddy</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        .leaderboard-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .leaderboard-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        .leaderboard-header .container {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .student-card {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+        
+        .student-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+        
+        .rank-badge {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .rank-badge.gold {
+            background: linear-gradient(135deg, #ffd700 0%, #ffed4a 100%);
+            color: #333;
+        }
+        
+        .rank-badge.silver {
+            background: linear-gradient(135deg, #c0c0c0 0%, #e2e8f0 100%);
+            color: #333;
+        }
+        
+        .rank-badge.bronze {
+            background: linear-gradient(135deg, #cd7f32 0%, #d69e2e 100%);
+            color: white;
+        }
+        
+        .activity-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #28a745;
+            border-radius: 50%;
+            margin-left: 0.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .activity-time {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        
+        .points-badge {
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold college-buddy-logo" href="index.html">
+                <i class="fas fa-graduation-cap me-2"></i>
+                <span class="brand-text">College Buddy</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav me-auto"></div>
+                
+                <div class="navbar-controls d-flex align-items-center">
+                    <button class="theme-toggle-btn me-3" id="themeToggle" title="Toggle Theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <button class="profile-pic-btn" onclick="window.location.href='../frontend-profile/profile-new.html'" title="Profile">
+                        <img src="https://via.placeholder.com/40x40/667eea/ffffff?text=U" alt="Profile" id="profileImage">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Leaderboard Header -->
+    <section class="leaderboard-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="display-4 fw-bold mb-3">🏆 Student Leaderboard</h1>
+                    <p class="lead">Top students who are most recently active in the College Buddy community</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard Content -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Top 3 Students -->
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <h3 class="mb-4 text-center">🌟 Top Contributors</h3>
+                        </div>
+                        
+                        <!-- #1 Student -->
+                        <div class="col-md-4 mb-4">
+                            <div class="student-card p-4 text-center h-100">
+                                <div class="rank-badge gold mb-3 mx-auto">1</div>
+                                <div class="student-avatar mx-auto mb-3">A</div>
+                                <h5 class="mb-2">Alex Johnson</h5>
+                                <p class="text-muted mb-2">Computer Science, MIT</p>
+                                <div class="points-badge mb-2">2,450 points</div>
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-success me-1"></i>
+                                    Active 5 minutes ago
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- #2 Student -->
+                        <div class="col-md-4 mb-4">
+                            <div class="student-card p-4 text-center h-100">
+                                <div class="rank-badge silver mb-3 mx-auto">2</div>
+                                <div class="student-avatar mx-auto mb-3">S</div>
+                                <h5 class="mb-2">Sarah Chen</h5>
+                                <p class="text-muted mb-2">Business, Stanford</p>
+                                <div class="points-badge mb-2">2,180 points</div>
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-success me-1"></i>
+                                    Active 12 minutes ago
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- #3 Student -->
+                        <div class="col-md-4 mb-4">
+                            <div class="student-card p-4 text-center h-100">
+                                <div class="rank-badge bronze mb-3 mx-auto">3</div>
+                                <div class="student-avatar mx-auto mb-3">M</div>
+                                <h5 class="mb-2">Mike Rodriguez</h5>
+                                <p class="text-muted mb-2">Engineering, Caltech</p>
+                                <div class="points-badge mb-2">1,950 points</div>
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-success me-1"></i>
+                                    Active 18 minutes ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Remaining Students -->
+                    <h4 class="mb-4">Recently Active Students</h4>
+                    
+                    <!-- Student Rank Cards -->
+                    <div class="student-card p-3 mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="rank-badge">4</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="student-avatar">E</div>
+                            </div>
+                            <div class="col">
+                                <h6 class="mb-1">Emma Davis</h6>
+                                <p class="mb-0 text-muted">Psychology, UCLA</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="points-badge">1,820 points</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-success me-1"></i>22 min ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card p-3 mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="rank-badge">5</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="student-avatar">D</div>
+                            </div>
+                            <div class="col">
+                                <h6 class="mb-1">David Kim</h6>
+                                <p class="mb-0 text-muted">Pre-Med, Harvard</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="points-badge">1,650 points</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-warning me-1"></i>1 hour ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card p-3 mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="rank-badge">6</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="student-avatar">L</div>
+                            </div>
+                            <div class="col">
+                                <h6 class="mb-1">Lisa Thompson</h6>
+                                <p class="mb-0 text-muted">Art History, Yale</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="points-badge">1,420 points</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-warning me-1"></i>2 hours ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card p-3 mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="rank-badge">7</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="student-avatar">J</div>
+                            </div>
+                            <div class="col">
+                                <h6 class="mb-1">Jake Wilson</h6>
+                                <p class="mb-0 text-muted">Economics, Princeton</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="points-badge">1,280 points</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-secondary me-1"></i>3 hours ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="student-card p-3 mb-3">
+                        <div class="row align-items-center">
+                            <div class="col-auto">
+                                <div class="rank-badge">8</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="student-avatar">R</div>
+                            </div>
+                            <div class="col">
+                                <h6 class="mb-1">Rachel Green</h6>
+                                <p class="mb-0 text-muted">Journalism, Columbia</p>
+                            </div>
+                            <div class="col-auto">
+                                <div class="points-badge">1,150 points</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="activity-time">
+                                    <i class="fas fa-circle text-secondary me-1"></i>5 hours ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Back to Home Button -->
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <button class="btn btn-primary btn-lg px-5" onclick="window.location.href='index.html'">
+                        <i class="fas fa-home me-2"></i>Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 College Buddy. Built by those who learn, for those who aspire.</p>
+            <div class="social-links mt-3">
+                <a href="#" class="text-light me-3"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-light"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+    </script>
+    
+    <!-- Custom JavaScript -->
+    <script src="main.js"></script>
+    
+    <script>
+        // Additional leaderboard-specific functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate real-time updates (optional)
+            setInterval(function() {
+                const indicators = document.querySelectorAll('.fas.fa-circle.text-success');
+                indicators.forEach(indicator => {
+                    indicator.style.opacity = indicator.style.opacity === '0.5' ? '1' : '0.5';
+                });
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Buddy - Connect, Learn, Grow</title>
+    
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        /* College Buddy - Custom CSS Styles */
+
+        /* Root Variables */
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-student: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
+            --border-radius: 12px;
+            
+            /* Light mode colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --border-color: #dee2e6;
+        }
+
+        /* Dark mode variables */
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --border-color: #404040;
+            --shadow-light: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --shadow-medium: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Global Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-primary);
+            padding-top: 76px;
+            transition: all 0.3s ease;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Text Gradient Effects */
+        .text-gradient-large {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hero Section Styles */
+        .hero-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+        }
+
+        [data-theme="dark"] .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,123,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Brand Emphasis */
+        .hero-brand-emphasis {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .college-buddy-title {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from {
+                filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.3));
+            }
+            to {
+                filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.6));
+            }
+        }
+
+        .brand-tagline {
+            animation: slideInUp 1s ease-out 0.5s both;
+        }
+
+        .bg-primary-gradient {
+            background: var(--gradient-primary) !important;
+            border: none;
+            box-shadow: var(--shadow-medium);
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Navigation Controls Styling */
+        .nav-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            color: white;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            color: white;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .profile-pic-btn {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 44px;
+            height: 44px;
+            overflow: hidden;
+        }
+
+        .profile-pic-btn:hover {
+            border-color: rgba(255, 255, 255, 0.8);
+            transform: scale(1.05);
+        }
+
+        .profile-pic-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Feature Grid Styles */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 800px;
+            margin: 3rem auto 0;
+            padding: 2rem 1rem;
+        }
+
+        .feature-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: var(--text-primary);
+            padding: 2rem 1rem;
+            border-radius: 50%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+            aspect-ratio: 1;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-light);
+            min-height: 140px;
+            min-width: 140px;
+        }
+
+        .feature-button:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: var(--bg-primary);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .feature-button:hover .feature-icon {
+            transform: scale(1.1);
+        }
+
+        .feature-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        /* Button Styles */
+        .btn {
+            border-radius: var(--border-radius);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-light);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            border: none;
+        }
+
+        /* Navigation Enhancements */
+        .navbar {
+            backdrop-filter: blur(10px);
+            background: rgba(0, 123, 255, 0.95) !important;
+            box-shadow: var(--shadow-light);
+            padding: 1rem 0;
+        }
+
+        /* College Buddy Logo Styling */
+        .college-buddy-logo {
+            font-size: 1.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .college-buddy-logo:hover {
+            transform: scale(1.05);
+        }
+
+        .brand-text {
+            background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        /* Theme Toggle Styling */
+        .theme-toggle .btn {
+            border-radius: 25px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .theme-toggle .btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        [data-theme="dark"] .theme-toggle .btn {
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Authentication Section */
+        .auth-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .auth-description {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .auth-buttons .btn {
+            border-radius: 20px;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .auth-buttons .btn:hover {
+            transform: translateY(-1px) scale(1.05);
+        }
+
+        .nav-link {
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 0.5rem 1rem !important;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-section {
+                text-align: center;
+            }
+            
+            .feature-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                max-width: 400px;
+            }
+            
+            .feature-button {
+                padding: 1.5rem 0.8rem;
+                min-height: 120px;
+                min-width: 120px;
+            }
+            
+            .feature-icon {
+                font-size: 2rem;
+            }
+            
+            .feature-label {
+                font-size: 0.9rem;
+            }
+            
+            .college-buddy-title {
+                font-size: 3rem;
+            }
+            
+            .hero-description {
+                font-size: 1.1rem;
+            }
+            
+            /* Mobile navigation adjustments */
+            .nav-buttons {
+                display: none !important;
+            }
+            
+            .navbar-controls {
+                gap: 0.5rem;
+            }
+            
+            .theme-toggle-btn,
+            .profile-pic-btn,
+            .nav-btn {
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .feature-grid {
+                gap: 1rem;
+                max-width: 300px;
+            }
+            
+            .college-buddy-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-description {
+                font-size: 1rem;
+                padding: 0 1rem;
+            }
+            
+            .college-buddy-logo {
+                font-size: 1.4rem;
+            }
+            
+            .auth-buttons .btn {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Loading Animation for Page */
+        .page-loader {
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body class="page-loader">
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <!-- College Buddy Logo as Home Button -->
+            <a class="navbar-brand fw-bold college-buddy-logo" href="#home" onclick="goHome()">
+                <i class="fas fa-graduation-cap me-2"></i>
+                <span class="brand-text">College Buddy</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Empty space to push right content to the right -->
+                <div class="navbar-nav me-auto"></div>
+                
+                <!-- Top-right controls -->
+                <div class="navbar-controls d-flex align-items-center">
+                    <!-- Small navigation buttons -->
+                    <div class="nav-buttons d-none d-md-flex me-3">
+                        <button class="nav-btn" onclick="handleFeatureClick('chat')" title="Chat Rooms">
+                            <i class="fas fa-comments"></i>
+                        </button>
+                        <button class="nav-btn" onclick="handleFeatureClick('search')" title="Smart Search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="nav-btn" onclick="window.location.href='discover.html'" title="Discover">
+                            <i class="fas fa-compass"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Theme Toggle -->
+                    <button class="theme-toggle-btn me-3" id="themeToggle" title="Toggle Theme">
+                        <i class="fas fa-moon" id="themeIcon"></i>
+                    </button>
+                    
+                    <!-- Profile Picture Button -->
+                    <button class="profile-pic-btn" onclick="window.location.href='profile-new.html'" title="Profile">
+                        <img src="https://via.placeholder.com/40x40/667eea/ffffff?text=U" alt="Profile" id="profileImage">
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <div class="container">
+            <div class="row align-items-center min-vh-100">
+                <div class="col-12">
+                    <div class="hero-content text-center">
+                        <div class="hero-brand-emphasis mb-4">
+                            <h1 class="display-3 fw-bold college-buddy-title mb-3">
+                                <span class="text-gradient-large">College Buddy</span>
+                            </h1>
+                            <div class="brand-tagline">
+                                <span class="badge bg-primary-gradient fs-6 px-3 py-2 rounded-pill">
+                                    🎓 Where Students Connect & Grow Together
+                                </span>
+                            </div>
+                        </div>
+                        <p class="lead mb-4 hero-description">
+                            The ultimate networking platform for college students! Connect with amazing peers from universities nationwide, 
+                            share experiences, collaborate on projects, and build lifelong friendships 
+                            that will enrich your college journey and beyond.
+                        </p>
+                        
+                        <!-- Feature Buttons Grid -->
+                        <div class="feature-grid">
+                            <a href="#" class="feature-button" onclick="handleFeatureClick('chat')">
+                                <div class="feature-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <span class="feature-label">Chat Rooms</span>
+                            </a>
+                            
+                            <a href="#" class="feature-button" onclick="handleFeatureClick('search')">
+                                <div class="feature-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <span class="feature-label">Smart Search</span>
+                            </a>
+                            
+                            <a href="discover.html" class="feature-button">
+                                <div class="feature-icon">
+                                    <i class="fas fa-compass"></i>
+                                </div>
+                                <span class="feature-label">Discover</span>
+                            </a>
+                            
+                            <a href="#" class="feature-button" onclick="handleFeatureClick('study-groups')">
+                                <div class="feature-icon">
+                                    <i class="fas fa-users-study"></i>
+                                </div>
+                                <span class="feature-label">Study Groups</span>
+                            </a>
+                            
+                            <a href="#" class="feature-button" onclick="handleFeatureClick('events')">
+                                <div class="feature-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <span class="feature-label">Campus Events</span>
+                            </a>
+                            
+                            <a href="profile-new.html" class="feature-button">
+                                <div class="feature-icon">
+                                    <i class="fas fa-user-circle"></i>
+                                </div>
+                                <span class="feature-label">My Profile</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container text-center">
+            <p>&copy; 2025 College Buddy. Built with ❤️ for students, by students.</p>
+            <div class="social-links mt-3">
+                <a href="#" class="text-light me-3" onclick="showComingSoon('Facebook')"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="text-light me-3" onclick="showComingSoon('Twitter')"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-light me-3" onclick="showComingSoon('Instagram')"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="text-light" onclick="showComingSoon('LinkedIn')"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize theme from localStorage
+            initializeTheme();
+            
+            // Load user profile picture
+            loadUserProfilePicture();
+            
+            // Log welcome message for developers
+            console.log('🎓 Welcome to College Buddy!');
+            console.log('Connect, Learn, Grow with fellow students.');
+        });
+
+        /**
+         * Initialize theme from localStorage or set default
+         */
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            if (themeIcon) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        /**
+         * Toggle between dark and light theme
+         */
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            const themeIcon = document.getElementById('themeIcon');
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            if (newTheme === 'dark') {
+                themeIcon.className = 'fas fa-sun';
+                showNotification('Dark Mode Enabled 🌙', 'Switched to dark mode for better night viewing!', 'info');
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                showNotification('Light Mode Enabled ☀️', 'Switched to light mode for daytime viewing!', 'info');
+            }
+        }
+
+        // Theme toggle event listener
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', toggleTheme);
+        }
+
+        // Navigate to home (scroll to top)
+        function goHome() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Handle feature button clicks
+        function handleFeatureClick(section) {
+            const messages = {
+                'chat': 'Chat Rooms feature coming soon! 💬',
+                'search': 'Smart Search feature coming soon! 🔍',
+                'study-groups': 'Study Groups feature coming soon! 📚',
+                'events': 'Campus Events feature coming soon! 🎉'
+            };
+            
+            if (messages[section]) {
+                const title = section.split('-').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                ).join(' ');
+                showNotification(`${title} Feature`, messages[section], 'info');
+            }
+        }
+
+        // Load user profile picture (simulated)
+        function loadUserProfilePicture() {
+            // In a real app, this would load the user's actual profile picture
+            // For now, we'll use a placeholder
+            const profileImg = document.getElementById('profileImage');
+            if (profileImg) {
+                // You can replace this with actual user profile picture URL
+                profileImg.src = 'https://via.placeholder.com/40x40/667eea/ffffff?text=' + 
+                    (localStorage.getItem('userInitials') || 'U');
+            }
+        }
+
+        // Show coming soon notification
+        function showComingSoon(feature) {
+            showNotification(`${feature} Integration`, `${feature} integration coming soon! Stay tuned for updates.`, 'info');
+        }
+
+        /**
+         * Show notification to user
+         */
+        function showNotification(title, message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'info' ? 'primary' : type} alert-dismissible fade show`;
+            notification.style.position = 'fixed';
+            notification.style.top = '100px';
+            notification.style.right = '20px';
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            notification.style.maxWidth = '400px';
+            notification.style.borderRadius = '12px';
+            notification.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.15)';
+            
+            notification.innerHTML = `
+                <div class="d-flex align-items-start">
+                    <div class="me-3">
+                        <i class="fas fa-info-circle fa-lg"></i>
+                    </div>
+                    <div>
+                        <strong>${title}</strong><br>
+                        <small>${message}</small>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.classList.remove('show');
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

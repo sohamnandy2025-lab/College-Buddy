@@ -22,6 +22,9 @@ function initializePage() {
     // Initialize theme from localStorage
     initializeTheme();
     
+    // Load user profile picture
+    loadUserProfilePicture();
+    
     // Log welcome message for developers
     console.log('🎓 Welcome to College Buddy!');
     console.log('Connect, Learn, Grow with fellow students.');
@@ -71,26 +74,15 @@ function setupEventListeners() {
         themeToggle.addEventListener('click', toggleTheme);
     }
     
-    // Modal switching functionality
-    if (showLogin) {
-        showLogin.addEventListener('click', function(e) {
-            e.preventDefault();
-            switchToLogin();
-        });
-    }
+    // Auth modal functionality
+    setupAuthModalHandlers();
     
-    if (showSignup) {
-        showSignup.addEventListener('click', function(e) {
+    // Logo click functionality
+    const logo = document.querySelector('.college-buddy-logo');
+    if (logo) {
+        logo.addEventListener('click', function(e) {
             e.preventDefault();
-            switchToSignup();
-        });
-    }
-    
-    // About button functionality
-    if (aboutBtn) {
-        aboutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            toggleAboutSection();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
     
@@ -138,35 +130,183 @@ function toggleTheme() {
 }
 
 /**
- * Switch from signup modal to login modal
+ * Setup auth modal handlers
  */
-function switchToLogin() {
-    const signupModal = bootstrap.Modal.getInstance(document.getElementById('signupModal'));
-    const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+function setupAuthModalHandlers() {
+    // Get elements
+    const signupView = document.getElementById('signupView');
+    const signinView = document.getElementById('signinView');
+    const emailFormView = document.getElementById('emailFormView');
+    const emailSignupForm = document.getElementById('emailSignupForm');
+    const emailLoginForm = document.getElementById('emailLoginForm');
+    const emailFormTitle = document.getElementById('emailFormTitle');
     
-    if (signupModal) {
-        signupModal.hide();
+    // Switch between signup and signin views
+    const switchToLogin = document.getElementById('switchToLogin');
+    const switchToSignup = document.getElementById('switchToSignup');
+    
+    if (switchToLogin) {
+        switchToLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            showAuthView('signin');
+        });
     }
     
-    setTimeout(() => {
-        loginModal.show();
-    }, 300);
+    if (switchToSignup) {
+        switchToSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            showAuthView('signup');
+        });
+    }
+    
+    // Email signup/login buttons
+    const emailSignup = document.getElementById('emailSignup');
+    const emailLogin = document.getElementById('emailLogin');
+    const backToOptions = document.getElementById('backToOptions');
+    
+    if (emailSignup) {
+        emailSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            showEmailForm('signup');
+        });
+    }
+    
+    if (emailLogin) {
+        emailLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            showEmailForm('login');
+        });
+    }
+    
+    if (backToOptions) {
+        backToOptions.addEventListener('click', function(e) {
+            e.preventDefault();
+            showAuthView('signup');
+        });
+    }
+    
+    // Form submissions
+    if (emailSignupForm) {
+        emailSignupForm.addEventListener('submit', handleEmailSignup);
+    }
+    
+    if (emailLoginForm) {
+        emailLoginForm.addEventListener('submit', handleEmailLogin);
+    }
+    
+    // Social auth handlers
+    const googleSignup = document.getElementById('googleSignup');
+    const googleLogin = document.getElementById('googleLogin');
+    
+    if (googleSignup) {
+        googleSignup.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleGoogleAuth('signup');
+        });
+    }
+    
+    if (googleLogin) {
+        googleLogin.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleGoogleAuth('login');
+        });
+    }
+    
+    // Reset modal to signup view when opened
+    const authModal = document.getElementById('authModal');
+    if (authModal) {
+        authModal.addEventListener('show.bs.modal', function() {
+            showAuthView('signup');
+        });
+    }
 }
 
 /**
- * Switch from login modal to signup modal
+ * Show specific auth view with smooth transition
  */
-function switchToSignup() {
-    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-    const signupModal = new bootstrap.Modal(document.getElementById('signupModal'));
+function showAuthView(view) {
+    const signupView = document.getElementById('signupView');
+    const signinView = document.getElementById('signinView');
+    const emailFormView = document.getElementById('emailFormView');
     
-    if (loginModal) {
-        loginModal.hide();
+    // Hide all views
+    [signupView, signinView, emailFormView].forEach(v => {
+        if (v) v.classList.add('d-none');
+    });
+    
+    // Show selected view
+    if (view === 'signup' && signupView) {
+        signupView.classList.remove('d-none');
+    } else if (view === 'signin' && signinView) {
+        signinView.classList.remove('d-none');
+    } else if (view === 'emailForm' && emailFormView) {
+        emailFormView.classList.remove('d-none');
+    }
+}
+
+/**
+ * Show email form for signup or login
+ */
+function showEmailForm(type) {
+    const emailFormTitle = document.getElementById('emailFormTitle');
+    const emailSignupForm = document.getElementById('emailSignupForm');
+    const emailLoginForm = document.getElementById('emailLoginForm');
+    
+    if (type === 'signup') {
+        if (emailFormTitle) emailFormTitle.innerHTML = '<i class="fas fa-envelope me-2"></i>Sign up with Email';
+        if (emailSignupForm) emailSignupForm.classList.remove('d-none');
+        if (emailLoginForm) emailLoginForm.classList.add('d-none');
+    } else {
+        if (emailFormTitle) emailFormTitle.innerHTML = '<i class="fas fa-envelope me-2"></i>Sign in with Email';
+        if (emailSignupForm) emailSignupForm.classList.add('d-none');
+        if (emailLoginForm) emailLoginForm.classList.remove('d-none');
     }
     
-    setTimeout(() => {
-        signupModal.show();
-    }, 300);
+    showAuthView('emailForm');
+}
+
+/**
+ * Handle email signup
+ */
+function handleEmailSignup(e) {
+    e.preventDefault();
+    const firstName = document.getElementById('firstName').value;
+    const email = document.getElementById('signupEmail').value;
+    
+    showNotification('Welcome to College Buddy! 🎉', 
+        `Hi ${firstName}! Your account creation is in progress. You'll receive a verification email at ${email}.`, 
+        'success');
+    
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+    if (modal) modal.hide();
+}
+
+/**
+ * Handle email login
+ */
+function handleEmailLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    
+    showNotification('Welcome Back! 👋', 
+        `Logging you in with ${email}... This is a demo, but you'd be redirected to your dashboard!`, 
+        'success');
+    
+    // Close modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
+    if (modal) modal.hide();
+}
+
+/**
+ * Handle Google authentication
+ */
+function handleGoogleAuth(type) {
+    const message = type === 'signup' ? 
+        'Google Sign Up coming soon! This will allow instant account creation with your Google account.' :
+        'Google Sign In coming soon! Quick access with your Google account.';
+    
+    showNotification('Google Authentication 🔐', message, 'info');
 }
 
 /**
@@ -545,6 +685,20 @@ function showNotification(title, message, type = 'info') {
             }, 300);
         }
     }, 5000);
+}
+
+/**
+ * Load user profile picture (simulated)
+ */
+function loadUserProfilePicture() {
+    // In a real app, this would load the user's actual profile picture
+    // For now, we'll use a placeholder
+    const profileImg = document.getElementById('profileImage');
+    if (profileImg) {
+        // You can replace this with actual user profile picture URL
+        profileImg.src = 'https://via.placeholder.com/40x40/667eea/ffffff?text=' + 
+            (localStorage.getItem('userInitials') || 'U');
+    }
 }
 
 /**
