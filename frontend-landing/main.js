@@ -104,8 +104,6 @@ function setupEventListeners() {
     // Navbar scroll effect
     setupNavbarScrollEffect();
     
-    // Social links interaction
-    setupSocialLinks();
 }
 
 /**
@@ -570,26 +568,6 @@ function setupNavbarScrollEffect() {
     }
 }
 
-/**
- * Set up social links interaction
- */
-function setupSocialLinks() {
-    const socialLinks = document.querySelectorAll('.social-links a');
-    
-    socialLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const platform = this.querySelector('i').className.includes('facebook') ? 'Facebook' :
-                           this.querySelector('i').className.includes('twitter') ? 'Twitter' :
-                           this.querySelector('i').className.includes('instagram') ? 'Instagram' :
-                           this.querySelector('i').className.includes('linkedin') ? 'LinkedIn' : 'Social';
-            
-            showNotification(`${platform} Link`, 
-                `${platform} integration coming soon! Follow us for updates.`, 
-                'info');
-        });
-    });
-}
 
 /**
  * Initialize animations and intersection observers
